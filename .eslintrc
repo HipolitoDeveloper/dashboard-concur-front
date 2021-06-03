@@ -1,0 +1,53 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "jest": true,
+    "node": true
+  },
+  "extends": [
+    "plugin:jsx-a11y/strict",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "prettier",
+    "plugin:compat/recommended"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "plugins": ["react", "react-hooks", "jsx-a11y", "prettier", "compat"],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-props-no-spreading": "off",
+    "no-unused-vars": "off",
+    "no-param-reassign": 0,
+    "no-restricted-globals": "off",
+    "func-names": "off",
+    "prefer-template": "off",
+    "consistent-return": "off",
+    "no-nested-ternary": "off",
+
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".js", ".jsx"]
+      }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-console": "off",
+    "react/prop-types": 0,
+    "prettier/prettier": ["error", {
+      "endOfLine":"auto"
+    }],
+    "compat/compat": "off"
+  }
+}

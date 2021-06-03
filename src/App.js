@@ -1,5 +1,12 @@
+import Routes from "./routes";
+import UserProvider from "./contexts/User/UserContext";
+
 function App() {
-  return <h1>Hello World!</h1>;
+  return (
+    <UserProvider>
+      <Routes />
+    </UserProvider>
+  );
 }
 
 export default App;
