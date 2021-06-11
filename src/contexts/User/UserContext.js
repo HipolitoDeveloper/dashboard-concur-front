@@ -1,6 +1,5 @@
 import { createContext, useEffect, useReducer, useState } from "react";
-import { UserReducer } from "./UserReducer";
-import { auth } from "../../services/firebase";
+import { auth, db } from "../../services/firebase";
 
 export const UserContext = createContext();
 
@@ -9,21 +8,19 @@ const getStorage = localStorage.getItem("currentUser")
   : null;
 
 const setStorage = (currentUser) => {
-  localStorage.setItem(
-    "currentUser",
-    JSON.stringify(currentUser.length > 0 ? currentUser : null)
-  );
+  localStorage.setItem("currentUser", JSON.stringify(currentUser));
 };
-const initialState = { currentUser: getStorage };
 
 const UserProvider = ({ children }) => {
   const [pending, setPending] = useState(true);
-  const [state, dispatch] = useReducer(UserReducer, initialState);
-
+  const [currentUser, setCurrentUser] = useState("");
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setPending(false);
-      if (user != null) setStorage(user.uid);
+      if (user != null) {
+        setStorage(user.uid);
+        setCurrentUser(user.uid);
+      }
     });
   }, []);
 
@@ -31,15 +28,41 @@ const UserProvider = ({ children }) => {
     return <>Loading...</>;
   }
 
-  const doSignIn = (payload) => {
-    return new Promise((resolve) => {
-      resolve(dispatch({ type: "SIGN_IN", payload }));
-    });
+  const doSignIn = async (event, payload) => {
+    console.log(payload);
+    event.preventDefault();
+    await db
+      .collection("usersCollection")
+      .where("email", "==", payload.email)
+      .get()
+      .then(async (querySnapshot) => {
+        if (
+          querySnapshot.docs.length > 0 &&
+          querySnapshot.docs[0].data().isAdmin === true
+        ) {
+          try {
+            await auth
+              .signInWithEmailAndPassword(payload.email, payload.password)
+              .then((user) => {
+                setStorage(user.user.uid);
+                window.location.href = "/home";
+              });
+          } catch (e) {
+            await auth.signOut();
+            localStorage.clear();
+            // toast.error(e.message);
+          }
+        } else {
+          await auth.signOut();
+          localStorage.clear();
+          // toast.error("Usuário não existe ou não é um administrador");
+        }
+      });
   };
 
   const contextValues = {
     doSignIn,
-    ...state,
+    currentUser,
   };
 
   return (

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Content = styled.div`
+  background-color: transparent;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -21,5 +22,9 @@ export const Input = styled.input`
   :hover {
     border-bottom: 5px solid var(--color-white);
     transition: all 1s;
+  }
+
+  :focus {
+    background-color: transparent;
   }
 `;

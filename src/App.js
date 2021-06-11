@@ -1,10 +1,13 @@
 import Routes from "./routes";
 import UserProvider from "./contexts/User/UserContext";
+import ShowCaseProvider from "./contexts/ShowCase/ShowCaseContext";
 
 function App() {
   return (
     <UserProvider>
-      <Routes />
+      <ShowCaseProvider>
+        <Routes />
+      </ShowCaseProvider>
     </UserProvider>
   );
 }

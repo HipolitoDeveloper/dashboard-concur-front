@@ -1,18 +1,22 @@
 import * as S from "./styled";
 import GlobalStyle from "../../../styles/global";
+import { NavLink } from "react-router-dom";
+import { ItemTitle } from "./styled";
 
 const menuItems = [
-  { title: "Vitrine" },
-  { title: "Eventos" },
-  { title: "Cadastro" },
-  { title: "Vídeos" },
-  { title: "Blog" },
+  { title: "Vitrine", route: "/vitrine" },
+  { title: "Eventos", route: "/vitriene" },
+  { title: "Cadastro", route: "/vitreine" },
+  { title: "Vídeos", route: "/videos" },
+  { title: "Blog", route: "/vitriene" },
 ];
 
 const SideMenu = () => {
   const renderItem = menuItems.map((item) => (
     <S.Item key={item.title}>
-      <S.ItemTitlte>{item.title}</S.ItemTitlte>
+      <NavLink to={item.route} activeClassName="active">
+        {item.title}
+      </NavLink>
     </S.Item>
   ));
 
@@ -21,7 +25,9 @@ const SideMenu = () => {
       <GlobalStyle />
       <S.Content>
         <S.Header>
-          <S.IconLogo />
+          <NavLink to={"/home"}>
+            <S.IconLogo />
+          </NavLink>
         </S.Header>
         {renderItem}
       </S.Content>

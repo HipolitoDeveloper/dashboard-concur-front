@@ -31,15 +31,20 @@ export const Item = styled.div`
   justify-content: center;
   border: 1px solid rgb(187, 134, 2);
 
-  :hover {
-    text-shadow: 4px 4px 0px rgba(150, 150, 150, 0.43);
-    cursor: pointer;
-
-    transition: all 0.5s;
+  a {
+    color: var(--color-white);
+    font-size: 25px;
   }
-`;
+}
 
-export const ItemTitlte = styled.span`
-  color: var(--color-white);
-  font-size: 25px;
+:hover {
+  text-shadow: 4px 4px 0px rgba(150, 150, 150, 0.43);
+  cursor: pointer;
+
+  transition: all 0.5s;
+}
+
+.active {
+  color: black;
+  font-weight: bold
 `;

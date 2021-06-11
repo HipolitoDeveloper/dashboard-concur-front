@@ -5,7 +5,7 @@ import GlobalStyle from "../../../styles/global";
 import Button from "../../atoms/Button";
 import { UserContext } from "../../../contexts/User/UserContext";
 import { Redirect } from "react-router-dom";
-import Toast from "../../atoms/Toast";
+// import Toast from "../../atoms/Toast";
 
 const Login = () => {
   const { doSignIn, currentUser } = useContext(UserContext);
@@ -16,8 +16,7 @@ const Login = () => {
   }
 
   const handleLogin = async (event) => {
-    event.preventDefault();
-    await doSignIn(userData);
+    doSignIn(event, userData);
   };
 
   const handleChange = (input) => {
@@ -67,7 +66,7 @@ const Login = () => {
           />
         </S.Form>
       </S.Content>
-      <Toast />
+      {/*<Toast />*/}
     </S.Container>
   );
 };

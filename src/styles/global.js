@@ -130,7 +130,6 @@ const GlobalStyle = createGlobalStyle`
   .carousel * {
     z-index: -1;
   }
-
 `;
 
 export default GlobalStyle;
