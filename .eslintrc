@@ -49,7 +49,7 @@
         ]
       }
     ],
-    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/rules-of-hooks": "off",
     "react-hooks/exhaustive-deps": "off",
     "no-console": "off",
     "react/prop-types": 0,
