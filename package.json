@@ -76,5 +76,6 @@
     "src/**/*.{js,jsx,json}": [
       "npm run lint:fix"
     ]
-  }
+  },
+
 }
