@@ -33,6 +33,7 @@ const ShowCase = () => {
       }
 
       let newObjImage = {};
+
       newShowCaseInView.images?.map((image, index) => {
         if (imageIndex === index) {
           newObjImage = image.data;

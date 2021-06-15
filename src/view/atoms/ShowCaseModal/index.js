@@ -58,53 +58,42 @@ const ShowCaseModal = ({ isOpen, handleClose, showToast }) => {
     });
   };
 
-  const submitImage = useCallback(
-    (event) => {
-      event.preventDefault();
-      try {
-        const uploadTask = storage
-          .ref()
-          .child(userFileNameImage)
-          .put(blob, { contentType: blob.type });
+  const submitImage = useCallback((event) => {
+    event.preventDefault();
+    try {
+      const uploadTask = storage
+        .ref()
+        .child(userFileNameImage)
+        .put(blob, { contentType: blob.type });
 
-        uploadTask.on(
-          "state_changed",
-          () => {},
-          () => {},
-          () => {
-            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-              showCaseImage.image = downloadURL;
-              showCaseImage.is_redirecting = true;
-              showCaseImage.is_showing = true;
+      uploadTask.on(
+        "state_changed",
+        () => {},
+        () => {},
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            showCaseImage.image = downloadURL;
+            showCaseImage.is_redirecting = true;
+            showCaseImage.is_showing = true;
 
-              db.collection(showCaseInView.collection)
-                .add(showCaseImage)
-                .then(() => {
-                  loadShowCase();
-                  cleanInformation();
-                  handleClose();
-                  showToast("success", "Imagem adicionada com sucesso");
-                });
-            });
-          }
-        );
-      } catch (error) {
-        loadShowCase();
-        cleanInformation();
-        handleClose();
-        showToast("error", "Não foi possível salvar a imagem");
-      }
-    },
-    [
-      blob,
-      handleClose,
-      loadShowCase,
-      showCaseInView,
-      showToast,
-      userFileNameImage,
-      showCaseImage,
-    ]
-  );
+            db.collection(showCaseInView.collection)
+              .add(showCaseImage)
+              .then(() => {
+                loadShowCase();
+                cleanInformation();
+                handleClose();
+                showToast("success", "Imagem adicionada com sucesso");
+              });
+          });
+        }
+      );
+    } catch (error) {
+      loadShowCase();
+      cleanInformation();
+      handleClose();
+      showToast("error", "Não foi possível salvar a imagem");
+    }
+  });
 
   const cleanInformation = () => {
     setBlob("");

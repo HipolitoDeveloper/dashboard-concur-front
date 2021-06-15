@@ -9,7 +9,7 @@ const ShowCaseHeader = ({ onChange }) => {
     useContext(ShowCaseContext);
   useEffect(() => {
     chooseShowCase(0);
-  });
+  }, []);
   const renderHeaderItem = showCases?.map((item, index) => (
     <S.HeaderItem
       key={item.title}
