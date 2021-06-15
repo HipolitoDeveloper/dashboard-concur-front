@@ -11,36 +11,52 @@ import * as Material from "@material-ui/core";
 import * as Lab from "@material-ui/lab";
 import ShowCaseModal from "../../atoms/ShowCaseModal";
 import { ShowCaseContext } from "../../../contexts/ShowCase/ShowCaseContext";
-import { CarouselContainer, CarouselContent, ImageContent } from "./styled";
 
 const ShowCase = () => {
-  const { showCases, showCaseInView, chooseShowCase } =
-    useContext(ShowCaseContext);
+  const { showCaseInView, loadShowCase } = useContext(ShowCaseContext);
 
-  const [objImage, setObjImage] = useState({});
+  const [objImage, setObjImage] = useState({
+    is_showing: false,
+    is_redirecting: false,
+    image: "",
+    index: 0,
+  });
   const [isOpen, setIsOpen] = useState(false);
   const [toast, setToast] = useState({});
 
-  useEffect(() => {
-    chooseShowCase(0);
-  }, []);
+  const setImage = async (imageIndex, changeRequested, value) => {
+    loadShowCase(null, updateImage);
 
-  const changeRedirect = (value) => {
-    objImage.is_redirecting = value;
-    setObjImage({ ...objImage });
-  };
-
-  const changeShow = (value) => {
-    objImage.is_showing = value;
-    setObjImage({ ...objImage });
-  };
-
-  const setImage = (imageIndex) => {
-    showCaseInView.images.forEach((image, index) => {
-      if (imageIndex === index) {
-        setObjImage(image);
+    function updateImage(newShowCaseInView) {
+      if (imageIndex === 0 && objImage.index === undefined) {
+        imageIndex = 0;
       }
-    });
+
+      let newObjImage = {};
+      newShowCaseInView.images?.map((image, index) => {
+        if (imageIndex === index) {
+          newObjImage = image.data;
+          switch (changeRequested) {
+            case "SHOW":
+              newObjImage.is_showing = value;
+              break;
+            case "REDIRECT":
+              newObjImage.is_redirecting = value;
+              break;
+          }
+          db.collection(newShowCaseInView.collection)
+            .doc(image.id)
+            .update({ ...newObjImage })
+            .then(() => {
+              newObjImage.index = index;
+              setObjImage({ ...newObjImage });
+            })
+            .catch((e) => {
+              alert("ERRO", "Não foi possível salvar a alteração na vitrine");
+            });
+        }
+      });
+    }
   };
 
   const handleModal = () => {
@@ -62,19 +78,18 @@ const ShowCase = () => {
   };
 
   const deleteImage = () => {
-    // loadShowCase();
     console.log(showCaseInView);
   };
 
   const renderImages = showCaseInView.images?.map((image) => (
-    <S.ImageContent key={image.image}>
-      <img src={image.image} alt="Imagem da vitrine" />
+    <S.ImageContent key={image.data.image}>
+      <img src={image.data.image} alt="Imagem da vitrine" />
     </S.ImageContent>
   ));
 
   return (
     <S.Container>
-      <ShowCaseHeader collection={showCaseInView} />
+      <ShowCaseHeader onChange={setImage} />
 
       {toast.showingToast && (
         <Lab.Alert severity={toast.severity}>{toast.text}</Lab.Alert>
@@ -82,6 +97,7 @@ const ShowCase = () => {
       <S.Content>
         <S.CarouselContainer>
           <Carousel
+            selectedItem={objImage.index}
             onChange={setImage}
             infiniteLoop={true}
             showThumbs={false}
@@ -95,10 +111,7 @@ const ShowCase = () => {
       <S.Bottom>
         <S.BottomItem>
           <h6>Ativar redirecionamento automático</h6>
-
           <Material.Checkbox
-            defaultChecked
-            defaultValue={false}
             checked={objImage.is_redirecting}
             icon={
               <Icon.DoneOutlineRounded
@@ -108,7 +121,7 @@ const ShowCase = () => {
             checkedIcon={<Icon.Done style={{ color: "var(--color-yellow)" }} />}
             name="redirecting"
             onChange={() => {
-              changeRedirect(!objImage.is_redirecting);
+              setImage(objImage.index, "REDIRECT", !objImage.is_redirecting);
             }}
           />
         </S.BottomItem>
@@ -118,8 +131,6 @@ const ShowCase = () => {
         <S.BottomItem>
           <h6>Disponibilizar imagem na vitrine</h6>
           <Material.Checkbox
-            defaultChecked
-            defaultValue={false}
             checked={objImage.is_showing}
             icon={
               <Icon.RemoveRedEyeOutlined
@@ -131,7 +142,7 @@ const ShowCase = () => {
             }
             name="redirecting"
             onChange={() => {
-              changeShow(!objImage.is_showing);
+              setImage(objImage.index, "SHOW", !objImage.is_showing);
             }}
           />
         </S.BottomItem>
@@ -155,5 +166,4 @@ const ShowCase = () => {
     </S.Container>
   );
 };
-
 export default ShowCase;

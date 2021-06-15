@@ -32,10 +32,7 @@ const initialState = {
     },
     { title: "Blog", collection: "blogCollection", active: false },
   ],
-  showCaseInView: {
-    collection: "homeCollection",
-    index: 0,
-  },
+  showCaseInView: getShowCaseInView,
 };
 
 const ShowCaseProvider = ({ children }) => {
@@ -43,8 +40,10 @@ const ShowCaseProvider = ({ children }) => {
 
   useEffect(() => {}, []);
 
-  const loadShowCase = async (payload) => {
-    await loadImages(state.showCaseInView);
+  const loadShowCase = async (payload, callback) => {
+    await loadImages(state.showCaseInView).then(() =>
+      callback(state.showCaseInView)
+    );
     dispatch({ type: "LOAD_SHOWCASE", payload });
   };
 
@@ -62,6 +61,8 @@ const ShowCaseProvider = ({ children }) => {
 
     state.showCaseInView = await buildShowCase;
     dispatch({ type: "CHOOSE_SHOWCASE", payload });
+
+    console.log(state.showCaseInView);
   };
 
   const contextValues = {

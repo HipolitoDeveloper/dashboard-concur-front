@@ -16,7 +16,6 @@ export const Content = styled.div`
 `;
 
 export const CarouselContainer = styled.div`
-  border: 1px solid red;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -25,7 +24,6 @@ export const CarouselContainer = styled.div`
 `;
 
 export const ImageContent = styled.div`
-  border: 1px solid red;
   img {
     height: 500px;
   }

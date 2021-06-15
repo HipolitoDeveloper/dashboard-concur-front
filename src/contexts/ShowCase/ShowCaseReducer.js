@@ -8,7 +8,10 @@ export const loadImages = async (collection) => {
       if (querySnapshot.docs.length > 0) {
         collection.images = [];
         querySnapshot.docs.forEach((snapshot) => {
-          collection.images.push(snapshot.data());
+          let image = { id: "", data: {} };
+          image.data = snapshot.data();
+          image.id = snapshot.id;
+          collection.images.push(image);
         });
         storage(collection);
       }
@@ -26,13 +29,12 @@ export const ShowCaseReducer = (state, action) => {
       state.showCases.forEach((itemFalse, f) => {
         if (index !== f) itemFalse.active = false;
       });
-
       return {
         ...state,
         showCases: state.showCases,
-        showCaseInView: state.showCaseInView,
       };
     case "LOAD_SHOWCASE":
+      console.log(state.showCaseInView);
       return {
         showCaseInView: state.showCaseInView,
         showCases: state.showCases,
