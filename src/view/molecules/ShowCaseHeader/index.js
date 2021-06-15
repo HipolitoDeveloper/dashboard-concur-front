@@ -1,15 +1,20 @@
 import * as S from "./styled";
 import GlobalStyle from "../../../styles/global";
-import { useContext, useEffect } from "react";
-import PropTypes from "prop-types";
+import { useCallback, useContext, useEffect } from "react";
 import { ShowCaseContext } from "../../../contexts/ShowCase/ShowCaseContext";
 
 const ShowCaseHeader = ({ onChange }) => {
   const { showCases, chooseShowCase, showCaseInView } =
     useContext(ShowCaseContext);
-  useEffect(() => {
+
+  const choose = () => {
     chooseShowCase(0);
+  };
+
+  useEffect(() => {
+    choose();
   }, []);
+
   const renderHeaderItem = showCases?.map((item, index) => (
     <S.HeaderItem
       key={item.title}
