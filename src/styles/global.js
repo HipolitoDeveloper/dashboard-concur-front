@@ -49,6 +49,7 @@ const GlobalStyle = createGlobalStyle`
     box-shadow: 0 0 0 0;
     outline: 0;
     border: none;
+    background-color: transparent;
 
   }
 

@@ -34,12 +34,20 @@ export const ShowCaseReducer = (state, action) => {
         showCases: state.showCases,
       };
     case "LOAD_SHOWCASE":
-      console.log(state.showCaseInView);
       return {
         showCaseInView: state.showCaseInView,
         showCases: state.showCases,
       };
-
+    case "DELETE_IMAGE":
+      state.showCaseInView.images.forEach((image, index) => {
+        if (image.id === action.payload.id) {
+          state.showCaseInView.images.splice(index, 1);
+        }
+      });
+      return {
+        showCaseInView: state.showCaseInView,
+        showCases: state.showCases,
+      };
     // case "CLEAR_ALL":
     //     return {
     //         transactions: [],

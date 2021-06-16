@@ -8,7 +8,7 @@ export const ShowCaseContext = createContext();
 const getShowCaseInView = localStorage.getItem("showCaseInView")
   ? JSON.parse(localStorage.getItem("showCaseInView"))
   : {
-      collection: "homeCollection",
+      collection: "homeShowCaseCollection",
       index: 0,
     };
 
@@ -22,15 +22,15 @@ const initialState = {
   showCases: [
     {
       title: "Página Principal",
-      collection: "homeCollection",
+      collection: "homeShowCaseCollection",
       active: true,
     },
     {
       title: "Eventos",
-      collection: "eventCollection",
+      collection: "eventShowCaseCollection",
       active: false,
     },
-    { title: "Blog", collection: "blogCollection", active: false },
+    { title: "Blog", collection: "blogShowCaseCollection", active: false },
   ],
   showCaseInView: getShowCaseInView,
 };
@@ -41,9 +41,9 @@ const ShowCaseProvider = ({ children }) => {
   useEffect(() => {}, []);
 
   const loadShowCase = async (payload, callback) => {
-    await loadImages(state.showCaseInView).then(() =>
-      callback(state.showCaseInView)
-    );
+    await loadImages(state.showCaseInView).then(() => {
+      if (callback !== undefined) callback(state.showCaseInView);
+    });
     dispatch({ type: "LOAD_SHOWCASE", payload });
   };
 
@@ -61,13 +61,16 @@ const ShowCaseProvider = ({ children }) => {
 
     state.showCaseInView = await buildShowCase;
     dispatch({ type: "CHOOSE_SHOWCASE", payload });
+  };
 
-    console.log(state.showCaseInView);
+  const deleteImageInShowCase = (payload) => {
+    dispatch({ type: "DELETE_IMAGE", payload });
   };
 
   const contextValues = {
     chooseShowCase,
     loadShowCase,
+    deleteImageInShowCase,
     ...state,
   };
 

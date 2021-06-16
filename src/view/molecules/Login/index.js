@@ -39,6 +39,7 @@ const Login = () => {
         </S.FormDescription>
         <S.Form onSubmit={handleLogin}>
           <Input
+            isFromLogin={true}
             type="text"
             onChange={handleChange}
             name="email"
@@ -47,6 +48,7 @@ const Login = () => {
             required={true}
           />
           <Input
+            isFromLogin={true}
             type="password"
             onChange={handleChange}
             name="password"

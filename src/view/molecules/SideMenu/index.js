@@ -8,7 +8,7 @@ const menuItems = [
   { title: "Eventos", route: "/vitriene" },
   { title: "Cadastro", route: "/vitreine" },
   { title: "Vídeos", route: "/videos" },
-  { title: "Blog", route: "/vitriene" },
+  { title: "Blog", route: "/posts" },
 ];
 
 const SideMenu = () => {

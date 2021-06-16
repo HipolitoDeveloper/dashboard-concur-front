@@ -4,16 +4,17 @@ import { db } from "../../../services/firebase";
 import { useContext, useEffect, useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { DragSwitch } from "react-dragswitch"; // requires a loader
 import "react-dragswitch/dist/index.css";
 import * as Icon from "@material-ui/icons";
 import * as Material from "@material-ui/core";
 import * as Lab from "@material-ui/lab";
 import ShowCaseModal from "../../atoms/ShowCaseModal";
 import { ShowCaseContext } from "../../../contexts/ShowCase/ShowCaseContext";
+import AlertModal from "../../atoms/AlertModal";
 
 const ShowCase = () => {
-  const { showCaseInView, loadShowCase } = useContext(ShowCaseContext);
+  const { showCaseInView, loadShowCase, deleteImageInShowCase } =
+    useContext(ShowCaseContext);
 
   const [objImage, setObjImage] = useState({
     is_showing: false,
@@ -21,7 +22,9 @@ const ShowCase = () => {
     image: "",
     index: 0,
   });
-  const [isOpen, setIsOpen] = useState(false);
+  const [isShowCaseModalOpen, setIsShowCaseModalOpen] = useState(false);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+
   const [toast, setToast] = useState({});
 
   const setImage = async (imageIndex, changeRequested, value) => {
@@ -50,18 +53,25 @@ const ShowCase = () => {
             .update({ ...newObjImage })
             .then(() => {
               newObjImage.index = index;
+              newObjImage.id = image.id;
               setObjImage({ ...newObjImage });
             })
             .catch((e) => {
-              alert("ERRO", "Não foi possível salvar a alteração na vitrine");
+              console.log(e);
+              alert("Tratar erro update show case");
             });
         }
       });
     }
   };
 
-  const handleModal = () => {
-    setIsOpen(!isOpen);
+  const handleShowCaseModal = () => {
+    setIsShowCaseModalOpen(!isShowCaseModalOpen);
+  };
+
+  const handleAlertModal = async () => {
+    await setImage(objImage.index, null, null);
+    setIsAlertModalOpen(!isAlertModalOpen);
   };
 
   const showToast = (severity, text) => {
@@ -78,8 +88,25 @@ const ShowCase = () => {
     setToast({ ...toast });
   };
 
-  const deleteImage = () => {
-    console.log(showCaseInView);
+  const deleteImage = async () => {
+    db.collection(showCaseInView.collection)
+      .doc(objImage.id)
+      .delete()
+      .then(() => {
+        deleteImageInShowCase(objImage);
+        setObjImage({
+          is_showing: false,
+          is_redirecting: false,
+          image: "",
+          index: 0,
+        });
+        setIsAlertModalOpen(!isAlertModalOpen);
+        showToast("success", "A imagem foi excluída com sucesso");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Tratar erro delete show case");
+      });
   };
 
   const renderImages = showCaseInView.images?.map((image) => (
@@ -126,7 +153,7 @@ const ShowCase = () => {
             }}
           />
         </S.BottomItem>
-        <S.BottomItem type="button" onClick={deleteImage}>
+        <S.BottomItem type="button" onClick={handleAlertModal}>
           <Icon.Delete className={"delete-button"} />
         </S.BottomItem>
         <S.BottomItem>
@@ -153,16 +180,24 @@ const ShowCase = () => {
         <Material.Fab
           aria-label="add"
           style={{ backgroundColor: "var(--color-yellow" }}
-          onClick={handleModal}
+          onClick={handleShowCaseModal}
         >
           <Icon.Add style={{ color: "var(--color-white" }} />
         </Material.Fab>
       </S.FabButton>
 
       <ShowCaseModal
-        isOpen={isOpen}
-        handleClose={handleModal}
+        isOpen={isShowCaseModalOpen}
+        handleClose={handleShowCaseModal}
         showToast={showToast}
+      />
+
+      <AlertModal
+        isOpen={isAlertModalOpen}
+        handleClose={handleAlertModal}
+        description={"Deseja mesmo excluir essa imagem da vitrine?"}
+        title={"Atenção"}
+        handleOk={deleteImage}
       />
     </S.Container>
   );

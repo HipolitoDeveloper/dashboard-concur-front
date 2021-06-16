@@ -1,10 +1,20 @@
 import * as S from "./styled";
 import PropTypes from "prop-types";
+import GlobalStyle from "../../../styles/global";
 
-const Input = ({ type, name, value, onChange, required, placeholder }) => {
+const Input = ({
+  type,
+  name,
+  value,
+  onChange,
+  required,
+  placeholder,
+  isFromLogin,
+}) => {
   return (
     <S.Content>
       <S.Input
+        isFromLogin={isFromLogin}
         type={type}
         name={name}
         value={value}
@@ -25,10 +35,12 @@ Input.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   required: PropTypes.bool,
+  isFromLogin: PropTypes.bool,
 };
 
 Input.defaultProps = {
   placeholder: "",
   value: "",
   required: false,
+  isFromLogin: true,
 };

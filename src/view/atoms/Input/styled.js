@@ -10,17 +10,25 @@ export const Content = styled.div`
 
 export const Input = styled.input`
   background-color: transparent;
-  border-bottom: 1px solid var(--color-white);
+  border-bottom: ${(props) =>
+    props.isFromLogin
+      ? "1px solid var(--color-white)"
+      : "1px solid var(--color-black)"};
   height: 50px;
   width: 50%;
-  color: var(--color-white);
+  color: ${(props) =>
+    props.isFromLogin ? "var(--color-white)" : "var(--color-grey)"};
 
   ::placeholder {
-    color: var(--color-white);
+    color: ${(props) =>
+      props.isFromLogin ? "var(--color-white)" : "var(--color-grey)"};
   }
 
   :hover {
-    border-bottom: 5px solid var(--color-white);
+    border-bottom: ${(props) =>
+      props.isFromLogin
+        ? "5px solid var(--color-white)"
+        : "5px solid var(--color-grey)"};
     transition: all 1s;
   }
 
