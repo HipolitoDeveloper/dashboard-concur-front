@@ -9,7 +9,7 @@ import { VideoContext } from "../../../contexts/Video/VideoContext";
 const ChatModal = ({ isOpen, handleClose }) => {
   const { messages } = useContext(ChatContext);
 
-  const { videoInView } = useContext(VideoContext);
+  // const { videoInView } = useContext(VideoContext);
 
   return (
     <div>
@@ -22,9 +22,7 @@ const ChatModal = ({ isOpen, handleClose }) => {
         <S.Container>
           <GlobalStyle />
           <S.Content>
-            <button type={"button"} onClick={() => console.log(videoInView)}>
-              AAAA
-            </button>
+            <button type={"button"}>AAAA</button>
           </S.Content>
         </S.Container>
       </Material.Modal>

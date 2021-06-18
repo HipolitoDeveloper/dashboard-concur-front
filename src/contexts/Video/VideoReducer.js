@@ -66,7 +66,7 @@ export const VideosReducer = (state, action) => {
       db.collection("videosCollection")
         .add(video)
         .then((id) => {
-          if (state.posts === null) {
+          if (state.videos === null) {
             state.videos = [];
             state.videos.push({ id: id.id, data: video });
           } else {

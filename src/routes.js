@@ -10,12 +10,15 @@ import VideoList from "./view/pages/VideoList";
 import PostList from "./view/pages/PostList";
 import PostCreator from "./view/pages/PostCreator";
 import VideoCreator from "./view/pages/VideoCreator";
+import EventList from "./view/pages/EventList";
 
 import TagsProvider from "./contexts/Tags/TagsContext";
 import ShowCaseProvider from "./contexts/ShowCase/ShowCaseContext";
 import BlogProvider from "./contexts/Blog/BlogContext";
 import VideosProvider from "./contexts/Video/VideoContext";
 import ChatProvider from "./contexts/Chat/ChatContext";
+import EventProvider from "./contexts/Event/EventContext";
+import EventCreator from "./view/pages/EventCreator";
 
 const Routes = () => {
   return (
@@ -45,6 +48,14 @@ const Routes = () => {
                   component={PostCreator}
                 />
               </BlogProvider>
+              <EventProvider>
+                <PrivateRoute exact path="/eventos" component={EventList} />
+                <PrivateRoute
+                  exact
+                  path="/eventos/criador"
+                  component={EventCreator}
+                />
+              </EventProvider>
             </ChatProvider>
           </TagsProvider>
         </Layout>

@@ -1,61 +1,72 @@
 import * as S from "./styled";
 import { useContext, useEffect, useState } from "react";
-import { TagsContext } from "../../../contexts/Tags/TagsContext";
 
 import * as Material from "@material-ui/core";
 import * as Icon from "@material-ui/icons";
-import { VideoContext } from "../../../contexts/Video/VideoContext";
 import ChatModal from "../../molecules/ChatModal";
 import { ChatContext } from "../../../contexts/Chat/ChatContext";
+import { EventContext } from "../../../contexts/Event/EventContext";
 
 const HeaderItems = [
   { nome: "Vídeo" },
   { nome: "TÍTULO" },
+  { nome: "CONFIRMADOS" },
   { nome: "CHAT" },
-  { nome: "DISPONIBILIDADE" },
+  { nome: "AO VIVO" },
   { nome: "EDITAR" },
 ];
 
-const VideoList = ({ history }) => {
-  const { videos, loadVideos, updateVideo, setVideoInView, deleteVideo } =
-    useContext(VideoContext);
+const EventList = ({ history }) => {
+  const {
+    events,
+    loadEvents,
+    updateEvent,
+    setEventInView,
+    deleteEvent,
+    eventInView,
+  } = useContext(EventContext);
 
   const { loadMessages } = useContext(ChatContext);
 
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
+  const [isGuestManagerOpen, setIsGuestManagerOpen] = useState(false);
 
   useEffect(() => {
-    const getVideos = async () => {
-      await loadVideos();
+    const getEvents = async () => {
+      await loadEvents();
     };
-    getVideos();
+    getEvents();
   }, []);
 
-  const handleChange = (video) => {
-    updateVideo({ video: video, updateStatus: true });
+  const handleChange = (event) => {
+    updateEvent({ event: event, updateStatus: true });
   };
 
-  const handleEdit = async (video) => {
-    await setVideoInView(video);
-    history.push("/video/criador");
+  const handleEdit = async (event) => {
+    await setEventInView(event);
+    history.push("/eventos/criador");
   };
 
-  const handleDelete = async (video) => {
-    await deleteVideo(video);
+  const handleDelete = async (event) => {
+    await deleteEvent(event);
 
     setTimeout(() => {
-      loadVideos();
+      loadEvents();
       //Implementar loading
     }, 1000);
   };
 
-  const handleChatModal = async (video) => {
-    if (video.type !== "click") {
-      await setVideoInView(video);
-      await loadMessages({ collection: "videosCollection", id: video.id });
+  const handleChatModal = async (event) => {
+    if (event.type !== "click") {
+      await setEventInView(event);
+      await loadMessages({ collection: "eventsCollection", id: event.id });
     }
 
     setIsChatModalOpen(!isChatModalOpen);
+  };
+
+  const handleGuestManagerModal = () => {
+    setIsGuestManagerOpen(!isGuestManagerOpen);
   };
 
   const renderHeader = HeaderItems.map((item) => (
@@ -64,39 +75,44 @@ const VideoList = ({ history }) => {
     </Material.TableCell>
   ));
 
-  const renderVideos = videos?.map((video, index) => (
-    <Material.TableRow key={video?.id}>
+  const renderEvents = events?.map((event, index) => (
+    <Material.TableRow key={event?.id}>
       <Material.TableCell component="th" scope="row">
-        <S.DeleteButton type={"button"} onClick={() => handleDelete(video)}>
+        <S.DeleteButton type={"button"} onClick={() => handleDelete(event)}>
           <Icon.Delete style={{ color: "var(--color-white)", fontSize: 25 }} />
         </S.DeleteButton>
         <S.ThumbnailContent>
-          {video?.data?.image === undefined ? (
+          {event?.data?.image === undefined ? (
             <S.ImageSpot />
           ) : (
-            <S.Image src={video?.data?.image} alt="Imagem do post" />
+            <S.Image src={event?.data?.image} alt="Imagem do post" />
           )}
         </S.ThumbnailContent>
       </Material.TableCell>
       <Material.TableCell component="th" scope="row">
-        <S.Title>{video?.data?.name}</S.Title>
+        <S.Title>{event?.data?.title}</S.Title>
       </Material.TableCell>
       <Material.TableCell component="th" scope="row">
-        <S.ChatIcon onClick={() => handleChatModal(video)}>
+        <S.Title onClick={handleGuestManagerModal}>
+          {event?.data?.confirmed_participants}
+        </S.Title>
+      </Material.TableCell>
+      <Material.TableCell component="th" scope="row">
+        <S.ChatIcon onClick={() => handleChatModal(event)}>
           <Icon.Chat style={{ color: "var(--color-yellow)" }} />
         </S.ChatIcon>
       </Material.TableCell>
       <Material.TableCell component="th" scope="row">
         <Material.Switch
-          checked={video?.data?.is_available}
-          onChange={() => handleChange(video)}
+          checked={event?.data?.is_live}
+          onChange={() => handleChange(event)}
           color="primary"
           name="isAvailable"
           inputProps={{ "aria-label": "primary checkbox" }}
         />
       </Material.TableCell>
       <Material.TableCell component="th" scope="row">
-        <S.EditIcon onClick={() => handleEdit(video)}>
+        <S.EditIcon onClick={() => handleEdit(event)}>
           <Icon.Edit style={{ color: "var(--color-yellow)" }} />
         </S.EditIcon>
       </Material.TableCell>
@@ -111,14 +127,14 @@ const VideoList = ({ history }) => {
             <Material.TableRow>{renderHeader}</Material.TableRow>
           </Material.TableHead>
 
-          <Material.TableBody>{renderVideos}</Material.TableBody>
+          <Material.TableBody>{renderEvents}</Material.TableBody>
         </Material.Table>
       </S.Content>
       <S.FabButton>
         <Material.Fab
           aria-label="add"
           style={{ backgroundColor: "var(--color-yellow" }}
-          onClick={() => history.push("/video/criador")}
+          onClick={() => history.push("/eventos/criador")}
         >
           <Icon.Add style={{ color: "var(--color-white" }} />
         </Material.Fab>
@@ -129,4 +145,4 @@ const VideoList = ({ history }) => {
   );
 };
 
-export default VideoList;
+export default EventList;

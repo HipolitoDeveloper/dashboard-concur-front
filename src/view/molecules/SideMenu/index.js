@@ -1,12 +1,11 @@
 import * as S from "./styled";
 import GlobalStyle from "../../../styles/global";
 import { NavLink } from "react-router-dom";
-import { ItemTitle } from "./styled";
 
 const menuItems = [
   { title: "Vitrine", route: "/vitrine" },
-  { title: "Eventos", route: "/vitriene" },
-  { title: "Cadastro", route: "/vitreine" },
+  { title: "Eventos", route: "/eventos" },
+  { title: "Cadastro", route: "/cadastro/concur" },
   { title: "Vídeos", route: "/videos" },
   { title: "Blog", route: "/posts" },
 ];
