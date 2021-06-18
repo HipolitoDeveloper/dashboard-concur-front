@@ -1,7 +1,7 @@
 import { db, storage } from "../../services/firebase";
 import { v4 as uuidv4 } from "uuid";
 
-export const getPosts = async (collection) => {
+export const getPosts = async () => {
   await db
     .collection("blogCollection")
     .get()
@@ -19,27 +19,39 @@ export const getPosts = async (collection) => {
     });
 };
 
-export const setStorage = (videos) => {
-  localStorage.setItem("posts", JSON.stringify(videos));
+export const setStorage = (posts) => {
+  localStorage.setItem("posts", JSON.stringify(posts));
 };
 
 export const BlogReducer = (state, action) => {
   switch (action.type) {
     case "UPDATE_POST":
-      console.log(action);
+      let postToUpdate = {};
+      state.posts.forEach((post) => {
+        if (action.payload.post.id === post.id) {
+          if (action.payload.updateStatus)
+            post.data.active = !action.payload.post.data.active;
+          else post.data = { ...action.payload.post.data };
+          postToUpdate = post;
+        }
+      });
+
+      postToUpdate.data.updateAt = new Date();
       db.collection("blogCollection")
-        .doc(action.payload.id)
-        .update({ ...action.payload.data })
+        .doc(postToUpdate.id)
+        .update({ ...postToUpdate.data })
         .then(() => {})
         .catch((e) => {
-          alert("ERRO", "Não foi possível salvar a alteração no video");
+          alert("Tratar erro não foi possível alterar o post");
         });
       return {
         ...state,
         posts: state.posts,
       };
     case "LOAD_POSTS":
+      state.posts = JSON.parse(localStorage.getItem("posts"));
       return {
+        ...state,
         posts: state.posts,
       };
     case "SAVE_POST":
@@ -47,6 +59,7 @@ export const BlogReducer = (state, action) => {
       const blob = action.payload.blob;
       const userFileNameImage = `images/${uuidv4()}-${blob.image}`;
       post.active = true;
+      post.createdDate = new Date();
       delete post.blob;
 
       const uploadTask = storage
@@ -65,20 +78,52 @@ export const BlogReducer = (state, action) => {
               .add(post)
               .then((id) => {
                 state.posts.push({ id: id.id, data: post });
+                setStorage(state.posts);
               });
           });
         }
       );
+
+      return {
+        ...state,
+        posts: state.posts,
+      };
+    case "SET_POSTINVIEW":
+      const postInView = action.payload;
+      localStorage.setItem("postInView", JSON.stringify(postInView));
+      return {
+        ...state,
+        postInView: postInView,
+      };
+
+    case "DELETE_POST":
+      db.collection("blogCollection")
+        .doc(action.payload.id)
+        .delete()
+        .then(() => {
+          state.posts.forEach((image, index) => {
+            if (image.id === action.payload.id) {
+              state.posts.splice(index, 1);
+              setStorage(state.posts);
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Tratar erro delete blog");
+        });
       return {
         ...state,
         posts: state.posts,
       };
 
-    // case "CLEAR_ALL":
-    //     return {
-    //         transactions: [],
-    //         ...storage([]),
-    //     }
+    case "CLEAR_POSTINVIEW":
+      localStorage.setItem("postInView", []);
+      state.postInView = [];
+      return {
+        ...state,
+        postInView: state.postInView,
+      };
     default:
       return state;
   }

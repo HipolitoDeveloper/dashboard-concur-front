@@ -7,12 +7,14 @@ import PrivateRoute from "./view/molecules/PrivateRoute";
 import Layout from "./view/molecules/Layout";
 import ShowCase from "./view/pages/ShowCase";
 import VideoList from "./view/pages/VideoList";
-
-import VideosProvider from "./contexts/Video/VideoContext";
-import ShowCaseProvider from "./contexts/ShowCase/ShowCaseContext";
-import BlogProvider from "./contexts/Blog/BlogContext";
 import PostList from "./view/pages/PostList";
 import PostCreator from "./view/pages/PostCreator";
+import VideoCreator from "./view/pages/VideoCreator";
+
+import TagsProvider from "./contexts/Tags/TagsContext";
+import ShowCaseProvider from "./contexts/ShowCase/ShowCaseContext";
+import BlogProvider from "./contexts/Blog/BlogContext";
+import VideosProvider from "./contexts/Video/VideoContext";
 
 const Routes = () => {
   return (
@@ -24,13 +26,24 @@ const Routes = () => {
           <ShowCaseProvider>
             <PrivateRoute exact path="/vitrine" component={ShowCase} />
           </ShowCaseProvider>
-          <VideosProvider>
-            <PrivateRoute exact path="/videos" component={VideoList} />
-          </VideosProvider>
-          <BlogProvider>
-            <PrivateRoute exact path="/posts" component={PostList} />
-            <PrivateRoute exact path="/post/criador" component={PostCreator} />
-          </BlogProvider>
+          <TagsProvider>
+            <VideosProvider>
+              <PrivateRoute exact path="/videos" component={VideoList} />
+              <PrivateRoute
+                exact
+                path="/video/criador"
+                component={VideoCreator}
+              />
+            </VideosProvider>
+            <BlogProvider>
+              <PrivateRoute exact path="/posts" component={PostList} />
+              <PrivateRoute
+                exact
+                path="/post/criador"
+                component={PostCreator}
+              />
+            </BlogProvider>
+          </TagsProvider>
         </Layout>
         <Route exact path="*" component={Login} />
       </Switch>

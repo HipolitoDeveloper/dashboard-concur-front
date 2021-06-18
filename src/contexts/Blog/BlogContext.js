@@ -3,39 +3,55 @@ import { getVideos, BlogReducer, getPosts } from "./BlogReducer";
 
 export const BlogContext = createContext();
 
-const storage = localStorage.getItem("posts")
+const getPostsFromStorage = localStorage.getItem("posts")
   ? JSON.parse(localStorage.getItem("posts"))
   : [];
 
+const getPostInViewFromStorage = localStorage.getItem("postInView")
+  ? JSON.parse(localStorage.getItem("postInView"))
+  : [];
+
 const initialState = {
-  posts: storage,
+  posts: getPostsFromStorage,
+  postInView: getPostInViewFromStorage,
 };
 
 const BlogProvider = ({ children }) => {
   const [state, dispatch] = useReducer(BlogReducer, initialState);
 
   const loadPosts = async (payload) => {
-    await getPosts();
-    console.log("posqw");
-    dispatch({ type: "LOAD_POSTS", payload });
+    await getPosts().then(() => {
+      dispatch({ type: "LOAD_POSTS", payload });
+    });
   };
 
-  const updatePost = (payload) => {
+  const updatePost = async (payload) => {
     dispatch({ type: "UPDATE_POST", payload });
+    await loadPosts();
   };
 
-  const savePost = async (payload, event) => {
-    event.preventDefault();
+  const savePost = async (payload) => {
     dispatch({ type: "SAVE_POST", payload });
   };
 
   const setPostInView = (payload) => {
     dispatch({ type: "SET_POSTINVIEW", payload });
   };
+
+  const deletePost = async (payload) => {
+    dispatch({ type: "DELETE_POST", payload });
+  };
+
+  const clearPostInView = (payload) => {
+    dispatch({ type: "CLEAR_POSTINVIEW", payload });
+  };
   const contextValues = {
     loadPosts,
     updatePost,
     savePost,
+    setPostInView,
+    clearPostInView,
+    deletePost,
     ...state,
   };
 

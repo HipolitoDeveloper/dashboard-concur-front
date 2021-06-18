@@ -9,32 +9,39 @@ import GlobalStyle from "../../../styles/global";
 const HeaderItems = [
   { nome: "Vídeo" },
   { nome: "TÍTULO" },
-  { nome: "CHAT" },
-  { nome: "DISPONIBILIDADE" },
+  { nome: "SUBTÍTULO" },
+  { nome: "DESCRIÇÃO" },
+  { nome: "ATIVO" },
   { nome: "EDITAR" },
 ];
 
 const PostList = ({ history }) => {
-  const { posts, loadPosts, updatePost } = useContext(BlogContext);
-  const [postList, setPostList] = useState(posts);
+  const { posts, loadPosts, updatePost, setPostInView, deletePost } =
+    useContext(BlogContext);
 
   useEffect(() => {
     const getPosts = async () => {
       await loadPosts();
-      console.log(posts);
     };
     getPosts();
   }, []);
 
-  const handleChange = (index) => {
-    const newVideoList = postList.map((post, i) => {
-      if (index === i) {
-        post.data.active = !post.data.active;
-        updatePost(post);
-      }
-      return post;
-    });
-    setPostList(newVideoList);
+  const handleChange = (post) => {
+    updatePost({ post: post, updateStatus: true });
+  };
+
+  const handleEdit = async (post) => {
+    await setPostInView(post);
+    history.push("/post/criador");
+  };
+
+  const handleDelete = async (post) => {
+    await deletePost(post);
+
+    setTimeout(() => {
+      loadPosts();
+      //Implementar loading
+    }, 1000);
   };
 
   const renderHeader = HeaderItems.map((item) => (
@@ -43,9 +50,12 @@ const PostList = ({ history }) => {
     </Material.TableCell>
   ));
 
-  const renderPosts = postList?.map((post, index) => (
+  const renderPosts = posts?.map((post, index) => (
     <Material.TableRow key={post?.id}>
       <Material.TableCell component="th" scope="row">
+        <S.DeleteButton type={"button"} onClick={() => handleDelete(post)}>
+          <Icon.Delete style={{ color: "var(--color-white)", fontSize: 25 }} />
+        </S.DeleteButton>
         <S.ThumbnailContent>
           {post?.data?.image === undefined ? (
             <S.ImageSpot />
@@ -66,15 +76,14 @@ const PostList = ({ history }) => {
       <Material.TableCell component="th" scope="row">
         <Material.Switch
           checked={post?.data?.active}
-          onChange={() => handleChange(index)}
+          onChange={() => handleChange(post)}
           color="primary"
           name="active"
           inputProps={{ "aria-label": "primary checkbox" }}
         />
       </Material.TableCell>
       <Material.TableCell component="th" scope="row">
-        <S.EditIcon>
-          {" "}
+        <S.EditIcon onClick={() => handleEdit(post)}>
           <Icon.Edit style={{ color: "var(--color-yellow)" }} />
         </S.EditIcon>
       </Material.TableCell>
@@ -84,12 +93,14 @@ const PostList = ({ history }) => {
   return (
     <S.Container>
       <GlobalStyle />
-      <Material.Table>
-        <Material.TableHead>
-          <Material.TableRow>{renderHeader}</Material.TableRow>
-        </Material.TableHead>
-        <Material.TableBody>{renderPosts}</Material.TableBody>
-      </Material.Table>
+      <S.Content>
+        <Material.Table stickyHeader>
+          <Material.TableHead>
+            <Material.TableRow>{renderHeader}</Material.TableRow>
+          </Material.TableHead>
+          <Material.TableBody>{renderPosts}</Material.TableBody>
+        </Material.Table>
+      </S.Content>
 
       <S.FabButton>
         <Material.Fab

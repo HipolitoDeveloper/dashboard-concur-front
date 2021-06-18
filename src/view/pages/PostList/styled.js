@@ -7,6 +7,12 @@ export const Container = styled.div`
   width: 100%;
 `;
 
+export const Content = styled.div`
+  width: 100%;
+  height: 85%;
+  overflow-y: scroll;
+`;
+
 export const HeaderTitle = styled.span`
   font-size: 20px;
   font-weight: bold;
@@ -27,13 +33,6 @@ export const ChatIcon = styled.span`
 
 export const EditIcon = styled.span`
   cursor: pointer;
-
-  :hover {
-    svg {
-      font-size: 30px;
-      transition: all 1s;
-    }
-  }
 `;
 
 export const Title = styled.span`
@@ -65,3 +64,29 @@ export const ImageSpot = styled.img`
 `;
 
 export const ThumbnailContent = styled.div``;
+
+export const DeleteButton = styled.button`
+  -webkit-box-shadow: -1px 14px 36px 3px rgba(0, 0, 0, 0.65);
+  -moz-box-shadow: -1px 14px 36px 3px rgba(0, 0, 0, 0.65);
+  box-shadow: -1px 14px 36px 3px rgba(0, 0, 0, 0.65);
+  height: 30px;
+  width: 30px;
+  background-color: red;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  top: 15px;
+  left: -10px;
+
+  :hover {
+    height: 35px;
+    width: 35px;
+
+    svg {
+      font-size: 30px;
+    }
+    transition: all 0.2s;
+  }
+`;

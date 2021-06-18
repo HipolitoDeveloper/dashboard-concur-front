@@ -1,13 +1,16 @@
 import * as S from "./styled";
 import Input from "../../atoms/Input";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "../../atoms/Button";
 import * as Icon from "@material-ui/icons";
 import { BlogContext } from "../../../contexts/Blog/BlogContext";
 
 const PostCreator = ({ history }) => {
-  const { post, savePost, loadPosts } = useContext(BlogContext);
-  const [objPost, setObjPost] = useState({});
+  const { postInView, savePost, clearPostInView, updatePost } =
+    useContext(BlogContext);
+  const [objPost, setObjPost] = useState({ ...postInView.data });
+
+  useEffect(() => {}, []);
 
   const handleChange = (input) => {
     const { value } = input.target;
@@ -59,9 +62,37 @@ const PostCreator = ({ history }) => {
     });
   };
 
+  const sendPostObj = async (event) => {
+    event.preventDefault();
+    if (postInView.length !== 0) {
+      updatePost({
+        post: { id: postInView.id, data: objPost },
+        updateStatus: false,
+      });
+      setTimeout(() => {
+        clearPostInView();
+        history.push("/posts");
+        //Implementar loading
+      }, 3000);
+    } else {
+      await savePost(objPost).then(() => {
+        setTimeout(() => {
+          history.push("/posts");
+          //Implementar loading
+        }, 3000);
+      });
+    }
+  };
+
   return (
     <S.Container>
-      <S.BackButton type={"button"} onClick={() => history.goBack()}>
+      <S.BackButton
+        type={"button"}
+        onClick={async () => {
+          await clearPostInView();
+          history.goBack();
+        }}
+      >
         <Icon.ArrowBack style={{ color: "var(--color-black)", fontSize: 30 }} />
       </S.BackButton>
       <S.Content>
@@ -87,13 +118,7 @@ const PostCreator = ({ history }) => {
             )}
           </S.ImageContent>
         </S.ImageSpot>
-        <S.PostForm
-          onSubmit={async (event) =>
-            await savePost(objPost, event).then(() => {
-              loadPosts(), history.push("/posts");
-            })
-          }
-        >
+        <S.PostForm onSubmit={(event) => sendPostObj(event)}>
           <Input
             isFromLogin={false}
             type="text"
@@ -125,16 +150,29 @@ const PostCreator = ({ history }) => {
           />
 
           <S.SubmitButton>
-            <Button
-              backgroundColor="var(--color-white)"
-              type="submit"
-              width="40%"
-              height="50px"
-              name="submitButton"
-              color="var(--color-yellow)"
-              borderColor="var(--color-yellow)"
-              text={"Salvar postagem"}
-            />
+            {postInView.length !== 0 ? (
+              <Button
+                backgroundColor="var(--color-white)"
+                type="submit"
+                width="40%"
+                height="50px"
+                name="submitButton"
+                color="var(--color-yellow)"
+                borderColor="var(--color-yellow)"
+                text={"Editar postagem"}
+              />
+            ) : (
+              <Button
+                backgroundColor="var(--color-white)"
+                type="submit"
+                width="40%"
+                height="50px"
+                name="submitButton"
+                color="var(--color-yellow)"
+                borderColor="var(--color-yellow)"
+                text={"Salvar postagem"}
+              />
+            )}
           </S.SubmitButton>
         </S.PostForm>
       </S.Content>

@@ -29,7 +29,6 @@ const UserProvider = ({ children }) => {
   }
 
   const doSignIn = async (event, payload) => {
-    console.log(payload);
     event.preventDefault();
     await db
       .collection("usersCollection")
