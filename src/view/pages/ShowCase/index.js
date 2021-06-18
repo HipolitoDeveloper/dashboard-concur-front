@@ -8,7 +8,7 @@ import "react-dragswitch/dist/index.css";
 import * as Icon from "@material-ui/icons";
 import * as Material from "@material-ui/core";
 import * as Lab from "@material-ui/lab";
-import ShowCaseModal from "../../atoms/ShowCaseModal";
+import ShowCaseModal from "../../molecules/ShowCaseModal";
 import { ShowCaseContext } from "../../../contexts/ShowCase/ShowCaseContext";
 import AlertModal from "../../atoms/AlertModal";
 

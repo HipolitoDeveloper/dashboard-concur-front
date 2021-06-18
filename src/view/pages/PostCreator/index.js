@@ -64,7 +64,7 @@ const PostCreator = ({ history }) => {
 
   const sendPostObj = async (event) => {
     event.preventDefault();
-    if (postInView.length !== 0) {
+    if (Object.keys(postInView).length !== 0) {
       updatePost({
         post: { id: postInView.id, data: objPost },
         updateStatus: false,
@@ -150,7 +150,7 @@ const PostCreator = ({ history }) => {
           />
 
           <S.SubmitButton>
-            {postInView.length !== 0 ? (
+            {Object.keys(postInView).length !== 0 ? (
               <Button
                 backgroundColor="var(--color-white)"
                 type="submit"

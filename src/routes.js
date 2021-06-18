@@ -15,6 +15,7 @@ import TagsProvider from "./contexts/Tags/TagsContext";
 import ShowCaseProvider from "./contexts/ShowCase/ShowCaseContext";
 import BlogProvider from "./contexts/Blog/BlogContext";
 import VideosProvider from "./contexts/Video/VideoContext";
+import ChatProvider from "./contexts/Chat/ChatContext";
 
 const Routes = () => {
   return (
@@ -27,22 +28,24 @@ const Routes = () => {
             <PrivateRoute exact path="/vitrine" component={ShowCase} />
           </ShowCaseProvider>
           <TagsProvider>
-            <VideosProvider>
-              <PrivateRoute exact path="/videos" component={VideoList} />
-              <PrivateRoute
-                exact
-                path="/video/criador"
-                component={VideoCreator}
-              />
-            </VideosProvider>
-            <BlogProvider>
-              <PrivateRoute exact path="/posts" component={PostList} />
-              <PrivateRoute
-                exact
-                path="/post/criador"
-                component={PostCreator}
-              />
-            </BlogProvider>
+            <ChatProvider>
+              <VideosProvider>
+                <PrivateRoute exact path="/videos" component={VideoList} />
+                <PrivateRoute
+                  exact
+                  path="/video/criador"
+                  component={VideoCreator}
+                />
+              </VideosProvider>
+              <BlogProvider>
+                <PrivateRoute exact path="/posts" component={PostList} />
+                <PrivateRoute
+                  exact
+                  path="/post/criador"
+                  component={PostCreator}
+                />
+              </BlogProvider>
+            </ChatProvider>
           </TagsProvider>
         </Layout>
         <Route exact path="*" component={Login} />

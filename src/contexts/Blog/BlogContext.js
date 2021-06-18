@@ -7,13 +7,9 @@ const getPostsFromStorage = localStorage.getItem("posts")
   ? JSON.parse(localStorage.getItem("posts"))
   : [];
 
-const getPostInViewFromStorage = localStorage.getItem("postInView")
-  ? JSON.parse(localStorage.getItem("postInView"))
-  : [];
-
 const initialState = {
   posts: getPostsFromStorage,
-  postInView: getPostInViewFromStorage,
+  postInView: {},
 };
 
 const BlogProvider = ({ children }) => {
@@ -27,7 +23,6 @@ const BlogProvider = ({ children }) => {
 
   const updatePost = async (payload) => {
     dispatch({ type: "UPDATE_POST", payload });
-    await loadPosts();
   };
 
   const savePost = async (payload) => {

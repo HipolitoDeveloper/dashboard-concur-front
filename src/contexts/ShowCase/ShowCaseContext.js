@@ -12,12 +12,6 @@ const getShowCaseInView = localStorage.getItem("showCaseInView")
       index: 0,
     };
 
-// const setStorage = (currentUser) => {
-//   localStorage.setItem(
-//     "showCase",
-//     JSON.stringify(currentUser.length > 0 ? currentUser : null)
-//   );
-// };
 const initialState = {
   showCases: [
     {

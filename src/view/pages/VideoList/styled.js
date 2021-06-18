@@ -21,13 +21,13 @@ export const HeaderTitle = styled.span`
   text-transform: uppercase;
 `;
 
-export const ChatIcon = styled.span`
+export const ChatIcon = styled.button`
   cursor: pointer;
 
   :hover {
     svg {
-      font-size: 30px;
-      transition: all 1s;
+      font-size: 25px;
+      transition: all 0.2s;
     }
   }
 `;
@@ -36,8 +36,8 @@ export const EditIcon = styled.span`
   cursor: pointer;
   :hover {
     svg {
-      font-size: 30px;
-      transition: all 1s;
+      font-size: 25px;
+      transition: all 0.2s;
     }
   }
 `;

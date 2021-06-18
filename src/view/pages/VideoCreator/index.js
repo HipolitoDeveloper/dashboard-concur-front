@@ -34,7 +34,7 @@ const VideoCreator = ({ history }) => {
 
   const sendVideoObj = async (event) => {
     event.preventDefault();
-    if (videoInView.length !== 0) {
+    if (Object.keys(videoInView).length !== 0) {
       updateVideo({
         video: { id: videoInView.id, data: objVideo },
         updateStatus: false,
@@ -119,7 +119,7 @@ const VideoCreator = ({ history }) => {
           </DropdownContent>
 
           <S.SubmitButton>
-            {videoInView.length !== 0 ? (
+            {Object.keys(videoInView).length !== 0 ? (
               <Button
                 backgroundColor="var(--color-white)"
                 type="submit"

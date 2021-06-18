@@ -5,6 +5,8 @@ import { TagsContext } from "../../../contexts/Tags/TagsContext";
 import * as Material from "@material-ui/core";
 import * as Icon from "@material-ui/icons";
 import { VideoContext } from "../../../contexts/Video/VideoContext";
+import ChatModal from "../../molecules/ChatModal";
+import { ChatContext } from "../../../contexts/Chat/ChatContext";
 
 const HeaderItems = [
   { nome: "Vídeo" },
@@ -15,8 +17,18 @@ const HeaderItems = [
 ];
 
 const VideoList = ({ history }) => {
-  const { videos, loadVideos, updateVideo, setVideoInView, deleteVideo } =
-    useContext(VideoContext);
+  const {
+    videos,
+    loadVideos,
+    updateVideo,
+    setVideoInView,
+    deleteVideo,
+    videoInView,
+  } = useContext(VideoContext);
+
+  const { loadMessages } = useContext(ChatContext);
+
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
 
   useEffect(() => {
     const getVideos = async () => {
@@ -25,8 +37,8 @@ const VideoList = ({ history }) => {
     getVideos();
   }, []);
 
-  const handleChange = (index) => {
-    updateVideo(index);
+  const handleChange = (video) => {
+    updateVideo({ video: video, updateStatus: true });
   };
 
   const handleEdit = async (video) => {
@@ -41,6 +53,15 @@ const VideoList = ({ history }) => {
       loadVideos();
       //Implementar loading
     }, 1000);
+  };
+
+  const handleChatModal = async (video) => {
+    if (video.type !== "click") {
+      await setVideoInView(video);
+      await loadMessages({ collection: "videosCollection", id: video.id });
+    }
+
+    setIsChatModalOpen(!isChatModalOpen);
   };
 
   const renderHeader = HeaderItems.map((item) => (
@@ -67,14 +88,14 @@ const VideoList = ({ history }) => {
         <S.Title>{video?.data?.name}</S.Title>
       </Material.TableCell>
       <Material.TableCell component="th" scope="row">
-        <S.ChatIcon>
+        <S.ChatIcon onClick={() => handleChatModal(video)}>
           <Icon.Chat style={{ color: "var(--color-yellow)" }} />
         </S.ChatIcon>
       </Material.TableCell>
       <Material.TableCell component="th" scope="row">
         <Material.Switch
           checked={video?.data?.is_available}
-          onChange={() => handleChange(index)}
+          onChange={() => handleChange(video)}
           color="primary"
           name="isAvailable"
           inputProps={{ "aria-label": "primary checkbox" }}
@@ -108,6 +129,8 @@ const VideoList = ({ history }) => {
           <Icon.Add style={{ color: "var(--color-white" }} />
         </Material.Fab>
       </S.FabButton>
+
+      <ChatModal isOpen={isChatModalOpen} handleClose={handleChatModal} />
     </S.Container>
   );
 };

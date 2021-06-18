@@ -30,7 +30,7 @@ export const VideosReducer = (state, action) => {
       state.videos.forEach((video, i) => {
         if (action.payload.video.id === video.id) {
           if (action.payload.updateStatus)
-            video.data.active = !action.payload.video.data.active;
+            video.data.is_available = !action.payload.video.data.is_available;
           else video.data = { ...action.payload.video.data };
 
           videoToUpdate = video;
@@ -66,7 +66,12 @@ export const VideosReducer = (state, action) => {
       db.collection("videosCollection")
         .add(video)
         .then((id) => {
-          state.videos.push({ id: id.id, data: video });
+          if (state.posts === null) {
+            state.videos = [];
+            state.videos.push({ id: id.id, data: video });
+          } else {
+            state.videos.push({ id: id.id, data: video });
+          }
           storage(state.videos);
         });
 
@@ -76,7 +81,6 @@ export const VideosReducer = (state, action) => {
       };
     case "SET_VIDEOINVIEW":
       const videoInView = action.payload;
-      localStorage.setItem("videoInView", JSON.stringify(videoInView));
       return {
         ...state,
         videoInView: videoInView,
@@ -104,8 +108,7 @@ export const VideosReducer = (state, action) => {
       };
 
     case "CLEAR_VIDEOINVIEW":
-      localStorage.setItem("videoInView", []);
-      state.videoInView = [];
+      state.videoInView = {};
       return {
         ...state,
         videoInView: state.videoInView,

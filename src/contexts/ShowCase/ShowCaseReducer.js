@@ -13,6 +13,7 @@ export const loadImages = async (collection) => {
           image.id = snapshot.id;
           collection.images.push(image);
         });
+
         storage(collection);
       }
     });

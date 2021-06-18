@@ -7,13 +7,13 @@ const getVideosFromStorage = localStorage.getItem("videos")
   ? JSON.parse(localStorage.getItem("videos"))
   : [];
 
-const getVideoInViewFromStorage = localStorage.getItem("videoInView")
-  ? JSON.parse(localStorage.getItem("videoInView"))
-  : [];
+// const getVideoInViewFromStorage = localStorage.getItem("videoInView")
+//   ? JSON.parse(localStorage.getItem("videoInView"))
+//   : [];
 
 const initialState = {
   videos: getVideosFromStorage,
-  videoInView: getVideoInViewFromStorage,
+  videoInView: {},
 };
 
 const VideosProvider = ({ children }) => {
@@ -27,7 +27,6 @@ const VideosProvider = ({ children }) => {
 
   const updateVideo = async (payload) => {
     dispatch({ type: "UPDATE_VIDEO", payload });
-    await loadVideos();
   };
 
   const saveVideo = async (payload) => {

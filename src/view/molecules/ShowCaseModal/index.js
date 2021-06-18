@@ -1,12 +1,12 @@
 import * as Material from "@material-ui/core";
 import * as S from "./styled";
 import GlobalStyle from "../../../styles/global";
-import Button from "../Button";
+import Button from "../../atoms/Button";
 import { v4 as uuidv4 } from "uuid";
 import { useCallback, useContext, useState } from "react";
 import { db, storage } from "../../../services/firebase";
 import PropTypes from "prop-types";
-import ShowCaseHeader from "../../molecules/ShowCaseHeader";
+import ShowCaseHeader from "../ShowCaseHeader";
 import { ShowCaseContext } from "../../../contexts/ShowCase/ShowCaseContext";
 
 const ShowCaseModal = ({ isOpen, handleClose, showToast }) => {

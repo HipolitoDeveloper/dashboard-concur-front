@@ -77,7 +77,13 @@ export const BlogReducer = (state, action) => {
             db.collection("blogCollection")
               .add(post)
               .then((id) => {
-                state.posts.push({ id: id.id, data: post });
+                if (state.posts === null) {
+                  state.posts = [];
+                  state.posts.push({ id: id.id, data: post });
+                } else {
+                  state.posts.push({ id: id.id, data: post });
+                }
+
                 setStorage(state.posts);
               });
           });
@@ -90,7 +96,6 @@ export const BlogReducer = (state, action) => {
       };
     case "SET_POSTINVIEW":
       const postInView = action.payload;
-      localStorage.setItem("postInView", JSON.stringify(postInView));
       return {
         ...state,
         postInView: postInView,
@@ -118,8 +123,7 @@ export const BlogReducer = (state, action) => {
       };
 
     case "CLEAR_POSTINVIEW":
-      localStorage.setItem("postInView", []);
-      state.postInView = [];
+      state.postInView = {};
       return {
         ...state,
         postInView: state.postInView,
