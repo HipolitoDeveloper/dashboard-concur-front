@@ -28,7 +28,7 @@ const Routes = () => {
     <UserProvider>
       <BrowserRouter>
         <Switch>
-          <Route exact path="/login" component={Login} />
+          <Route exact path="/" component={Login} />
           <Layout>
             <ShowCaseProvider>
               <PrivateRoute exact path="/vitrine" component={ShowCase} />
