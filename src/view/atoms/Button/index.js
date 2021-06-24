@@ -5,7 +5,7 @@ import Input from "../Input";
 const Button = ({
   text,
   type,
-  onChange,
+  onClick,
   name,
   width,
   height,
@@ -16,7 +16,7 @@ const Button = ({
   return (
     <S.Button
       type={type}
-      onChange={onChange}
+      onClick={onClick}
       name={name}
       width={width}
       backgroundColor={backgroundColor}
@@ -40,7 +40,7 @@ Button.propTypes = {
   borderColor: PropTypes.string,
   color: PropTypes.string,
   backgroundColor: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 Button.defaultProps = {
@@ -52,5 +52,5 @@ Button.defaultProps = {
   borderColor: "",
   color: "",
   backgroundColor: "",
-  onChange: () => {},
+  onClick: () => {},
 };

@@ -11,12 +11,14 @@ import GlobalStyle from "../../../styles/global";
 import { EventContext } from "../../../contexts/Event/EventContext";
 import * as Material from "@material-ui/core";
 import GuestManager from "../../molecules/GuestManager";
+import AlertModal from "../../atoms/AlertModal";
 
 const EventCreator = ({ history }) => {
-  const { eventInView, saveEvent, updateEvent, clearEventInView } =
+  const { eventInView, saveEvent, updateEvent, clearEventInView, loadEvents } =
     useContext(EventContext);
   const [objEvent, setObjEvent] = useState({ ...eventInView.data });
   const [isGuestManagerOpen, setIsGuestManagerOpen] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const handleChange = (input) => {
     const { value } = input.target;
@@ -34,6 +36,7 @@ const EventCreator = ({ history }) => {
 
   const handleGuestManagerModal = () => {
     setIsGuestManagerOpen(!isGuestManagerOpen);
+    setIsAlertOpen(false);
   };
 
   const handleImage = (e) => {
@@ -77,32 +80,43 @@ const EventCreator = ({ history }) => {
     });
   };
 
-  const sendEventObj = async (event) => {
+  const sendEventObj = (event) => {
     event.preventDefault();
-    // if (Object.keys(eventInView).length !== 0) {
-    //   updateEvent({
-    //     event: { id: eventInView.id, data: objEvent },
-    //     updateStatus: false,
-    //   });
-    //   setTimeout(() => {
-    //     clearEventInView();
-    //     history.push("/eventos");
-    //     //Implementar loading
-    //   }, 3000);
-    // } else {
-    handleGuestManagerModal();
-    //   await saveEvent(objEvent).then(() => {
-    //     setTimeout(() => {
-    //       history.push("/eventos");
-    //       //Implementar loading
-    //     }, 3000);
-    //   });
-    // }
+    handleAlertModal();
+  };
+
+  const handleAlertModal = () => {
+    setIsAlertOpen(!isAlertOpen);
+  };
+
+  const handleSave = async (isSavingWithNoParticipants) => {
+    if (Object.keys(eventInView).length !== 1) {
+      await updateEvent({
+        event: { id: eventInView.id, data: objEvent },
+        updateStatus: false,
+      });
+    } else {
+      await saveEvent({
+        event: objEvent,
+        hasParticipants: isSavingWithNoParticipants,
+      }).then(() => {});
+    }
+
+    console.log(isSavingWithNoParticipants);
+    if (isSavingWithNoParticipants) {
+      handleGuestManagerModal();
+    } else {
+      setTimeout(() => {
+        history.push("/eventos");
+        //Implementar loading
+      }, 3000);
+    }
   };
 
   return (
     <S.Container>
       <GlobalStyle />
+
       <S.BackButton
         type={"button"}
         onClick={async () => {
@@ -209,6 +223,18 @@ const EventCreator = ({ history }) => {
       <GuestManager
         isOpen={isGuestManagerOpen}
         handleClose={handleGuestManagerModal}
+        objEvent={objEvent}
+        history={history}
+      />
+
+      <AlertModal
+        handleOk={() => handleSave(true)}
+        title={"Atenção"}
+        description={"Gostaria de adicionar novos participantes?"}
+        handleClose={() => handleSave(false)}
+        optionOne={"Sim"}
+        optionTwo={"Não"}
+        isOpen={isAlertOpen}
       />
     </S.Container>
   );

@@ -3,7 +3,17 @@ import * as Material from "@material-ui/core";
 import GlobalStyle from "../../../styles/global";
 import PropTypes from "prop-types";
 
-const AlertModal = ({ title, description, isOpen, handleClose, handleOk }) => {
+const AlertModal = ({
+  title,
+  description,
+  isOpen,
+  handleClose,
+  handleOk,
+  handleThree,
+  optionOne,
+  optionTwo,
+  optionThree,
+}) => {
   return (
     <div>
       <Material.Modal
@@ -20,15 +30,24 @@ const AlertModal = ({ title, description, isOpen, handleClose, handleOk }) => {
             <S.Main>{description}</S.Main>
             <S.Footer>
               <S.Options>
-                <S.OkButton onClick={handleOk} name={"ok"} type={"button"}>
-                  OK
+                <S.OkButton onClick={handleOk} name={optionOne} type={"button"}>
+                  {optionOne}
                 </S.OkButton>
+                {optionThree !== "" && (
+                  <S.OkButton
+                    onClick={handleThree}
+                    name={optionThree}
+                    type={"button"}
+                  >
+                    {optionThree}
+                  </S.OkButton>
+                )}
                 <S.CloseButton
                   onClick={handleClose}
-                  name={"close"}
+                  name={optionTwo}
                   type={"button"}
                 >
-                  Fechar
+                  {optionTwo}
                 </S.CloseButton>
               </S.Options>
             </S.Footer>
@@ -47,6 +66,9 @@ AlertModal.propTypes = {
   handleOk: PropTypes.func,
   title: PropTypes.string,
   description: PropTypes.string,
+  optionOne: PropTypes.string,
+  optionTwo: PropTypes.string,
+  optionThree: PropTypes.string,
 };
 
 AlertModal.defaultProps = {
@@ -55,4 +77,7 @@ AlertModal.defaultProps = {
   description: "",
   handleClose: () => {},
   handleOk: () => {},
+  optionOne: "OK",
+  optionTwo: "Cancelar",
+  optionThree: "",
 };

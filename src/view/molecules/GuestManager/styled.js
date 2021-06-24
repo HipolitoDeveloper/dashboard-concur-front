@@ -9,8 +9,7 @@ export const Container = styled.div`
   justify-content: center;
 `;
 
-export const Content = styled.form`
-  overflow-x: scroll;
+export const Content = styled.div`
   top: 0;
   position: absolute;
   border-radius: 100px;
@@ -22,18 +21,46 @@ export const Content = styled.form`
   align-items: center;
   justify-content: center;
 `;
+export const ParticipantContainer = styled.div`
+  max-width: 1000px;
+  padding: 30px;
+  overflow-x: scroll;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-right: 10px;
+`;
 
 export const ParticipantContent = styled.div`
+  margin: 0 20px 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 `;
 
+export const DeleteButton = styled.button`
+  -webkit-box-shadow: -1px 14px 36px -8px rgba(0, 0, 0, 0.65);
+  -moz-box-shadow: -1px 14px 36px -8px rgba(0, 0, 0, 0.65);
+  box-shadow: -1px 14px 36px -8px rgba(0, 0, 0, 0.65);
+  background-color: var(--color-yellow);
+  border-radius: 100px;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  top: 10px;
+`;
+
 export const Image = styled.img`
   width: 200px;
   height: 200px;
   cursor: pointer;
+  border-radius: 100px;
+  margin-bottom: 12px;
 `;
 
 export const ImageSpot = styled.div`
@@ -94,5 +121,28 @@ export const AddParticipant = styled.button`
     }
 
     transition: all 1s;
+  }
+`;
+
+export const EditButton = styled.button`
+  -webkit-box-shadow: -1px 14px 36px 3px rgba(0, 0, 0, 0.65);
+  -moz-box-shadow: -1px 14px 36px 3px rgba(0, 0, 0, 0.65);
+  box-shadow: -1px 14px 36px 3px rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-grey);
+  border-radius: 100px;
+  position: relative;
+  bottom: -290px;
+  left: -70px;
+  svg {
+    color: var(--color-grey);
+  }
+
+  :hover {
+    svg {
+      font-size: 25px;
+    }
   }
 `;

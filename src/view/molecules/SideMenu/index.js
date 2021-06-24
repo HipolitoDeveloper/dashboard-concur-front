@@ -4,10 +4,10 @@ import { NavLink } from "react-router-dom";
 
 const menuItems = [
   { title: "Vitrine", route: "/vitrine" },
-  { title: "Eventos", route: "/eventos" },
-  { title: "Cadastro", route: "/cadastro/concur" },
   { title: "Vídeos", route: "/videos" },
+  { title: "Eventos", route: "/eventos" },
   { title: "Blog", route: "/posts" },
+  { title: "Cadastro", route: "/gerenciar/cadastro" },
 ];
 
 const SideMenu = () => {

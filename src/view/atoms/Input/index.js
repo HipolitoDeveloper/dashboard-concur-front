@@ -10,6 +10,7 @@ const Input = ({
   required,
   placeholder,
   isFromLogin,
+  readOnly,
 }) => {
   return (
     <S.Content>
@@ -21,6 +22,7 @@ const Input = ({
         onChange={onChange}
         required={required}
         placeholder={placeholder}
+        disabled={readOnly}
       />
     </S.Content>
   );
@@ -36,6 +38,7 @@ Input.propTypes = {
   onChange: PropTypes.func.isRequired,
   required: PropTypes.bool,
   isFromLogin: PropTypes.bool,
+  readOnly: PropTypes.bool,
 };
 
 Input.defaultProps = {
@@ -43,4 +46,5 @@ Input.defaultProps = {
   value: "",
   required: false,
   isFromLogin: true,
+  readOnly: false,
 };

@@ -14,7 +14,10 @@ export const EventContext = createContext();
 const initialState = {
   events: [],
   eventInView: {
-    data: { is_live: true },
+    data: {
+      is_live: true,
+      participants: [],
+    },
   },
 };
 
@@ -23,12 +26,14 @@ const EventProvider = ({ children }) => {
 
   const loadEvents = async (payload) => {
     await getEvents().then((events) => {
+      console.log(events);
       dispatch({ type: "LOAD_EVENTS", events });
     });
   };
 
   const updateEvent = async (payload) => {
     dispatch({ type: "UPDATE_EVENT", payload });
+    await loadEvents();
   };
 
   const saveEvent = async (payload) => {
@@ -43,8 +48,32 @@ const EventProvider = ({ children }) => {
     dispatch({ type: "CLEAR_EVENTINVIEW", payload });
   };
 
-  const deleteEvent = async (payload) => {
+  const deleteEvent = (payload) => {
     dispatch({ type: "DELETE_EVENT", payload });
+  };
+
+  const saveParticipant = (payload) => {
+    dispatch({ type: "SAVE_PARTICIPANT", payload });
+  };
+
+  const editParticipant = (payload) => {
+    dispatch({ type: "EDIT_PARTICIPANT", payload });
+  };
+
+  const addParticipant = (payload) => {
+    dispatch({ type: "ADD_PARTICIPANT", payload });
+  };
+
+  const deleteParticipant = (payload) => {
+    dispatch({ type: "DELETE_PARTICIPANT", payload });
+  };
+
+  const handleChangeParticipant = (payload) => {
+    dispatch({ type: "HANDLE_PARTICIPANT", payload });
+  };
+
+  const fixEvent = (payload) => {
+    dispatch({ type: "FIX_EVENT", payload });
   };
 
   const contextValues = {
@@ -54,6 +83,12 @@ const EventProvider = ({ children }) => {
     setEventInView,
     clearEventInView,
     deleteEvent,
+    addParticipant,
+    deleteParticipant,
+    handleChangeParticipant,
+    saveParticipant,
+    editParticipant,
+    fixEvent,
     ...state,
   };
 

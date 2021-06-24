@@ -9,7 +9,7 @@ import { VideoContext } from "../../../contexts/Video/VideoContext";
 const ChatModal = ({ isOpen, handleClose }) => {
   const { messages } = useContext(ChatContext);
 
-  // const { videoInView } = useContext(VideoContext);
+  // const { videoInView } = useContext(SignupContext);
 
   return (
     <div>

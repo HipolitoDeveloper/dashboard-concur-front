@@ -11,6 +11,8 @@ import PostList from "./view/pages/PostList";
 import PostCreator from "./view/pages/PostCreator";
 import VideoCreator from "./view/pages/VideoCreator";
 import EventList from "./view/pages/EventList";
+import EventCreator from "./view/pages/EventCreator";
+import SignupManager from "./view/pages/SignupManager";
 
 import TagsProvider from "./contexts/Tags/TagsContext";
 import ShowCaseProvider from "./contexts/ShowCase/ShowCaseContext";
@@ -18,7 +20,7 @@ import BlogProvider from "./contexts/Blog/BlogContext";
 import VideosProvider from "./contexts/Video/VideoContext";
 import ChatProvider from "./contexts/Chat/ChatContext";
 import EventProvider from "./contexts/Event/EventContext";
-import EventCreator from "./view/pages/EventCreator";
+import SignupProvider from "./contexts/SignupManager/SignupContext";
 
 const Routes = () => {
   return (
@@ -58,6 +60,13 @@ const Routes = () => {
               </EventProvider>
             </ChatProvider>
           </TagsProvider>
+          <SignupProvider>
+            <PrivateRoute
+              exact
+              path="/gerenciar/cadastro"
+              component={SignupManager}
+            />
+          </SignupProvider>
         </Layout>
         <Route exact path="*" component={Login} />
       </Switch>

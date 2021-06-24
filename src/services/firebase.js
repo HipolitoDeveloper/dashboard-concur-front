@@ -30,4 +30,4 @@ const reAuth = firebase.auth.EmailAuthProvider;
 
 export default firebaseApp;
 
-export { auth, db, storage, analytics, PasswordUpdate, reAuth };
+export { auth, db, storage, analytics, PasswordUpdate, reAuth, firebase };
