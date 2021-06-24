@@ -3,30 +3,28 @@ import { auth, db } from "../../services/firebase";
 
 export const UserContext = createContext();
 
-const getStorage = localStorage.getItem("currentUser")
-  ? JSON.parse(localStorage.getItem("currentUser"))
-  : null;
-
-const setStorage = (currentUser) => {
-  localStorage.setItem("currentUser", JSON.stringify(currentUser));
-};
-
 const UserProvider = ({ children }) => {
   const [pending, setPending] = useState(true);
-  const [currentUser, setCurrentUser] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setPending(false);
-      if (user != null) {
-        setStorage(user.uid);
-        setCurrentUser(user.uid);
-      }
+      setCurrentUser(user.uid);
     });
   }, []);
 
   if (pending) {
     return <>Loading...</>;
   }
+
+  const verifyUser = async () => {
+    auth.onAuthStateChanged((user) => {
+      setPending(false);
+
+      setCurrentUser(user.uid);
+    });
+  };
 
   const doSignIn = async (event, payload) => {
     event.preventDefault();
@@ -43,24 +41,39 @@ const UserProvider = ({ children }) => {
             await auth
               .signInWithEmailAndPassword(payload.email, payload.password)
               .then((user) => {
-                setStorage(user.user.uid);
+                setCurrentUser(user.user.uid);
                 window.location.href = "/home";
               });
           } catch (e) {
             await auth.signOut();
             localStorage.clear();
+            alert(e);
             // toast.error(e.message);
           }
         } else {
           await auth.signOut();
           localStorage.clear();
+          alert(
+            "O usuário não tem permissão para acessar o dashboard. Contate o administrador do sistema"
+          );
           // toast.error("Usuário não existe ou não é um administrador");
         }
+      })
+      .catch((e) => {
+        alert(e);
       });
   };
 
+  const doSignOut = async () => {
+    setCurrentUser(null);
+    await auth.signOut();
+    localStorage.clear();
+  };
+
   const contextValues = {
+    verifyUser,
     doSignIn,
+    doSignOut,
     currentUser,
   };
 

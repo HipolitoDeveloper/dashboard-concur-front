@@ -75,10 +75,13 @@ const GlobalStyle = createGlobalStyle`
   input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px var(--color-background) inset;
     box-shadow: 0 0 0 30px var(--color-background) inset;
+    background-color: transparent;
   }
 
   input:-webkit-autofill {
     -webkit-text-fill-color: var(--color-text) !important;
+    background-color: transparent;
+
   }
 
 

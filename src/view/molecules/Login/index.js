@@ -7,7 +7,7 @@ import { UserContext } from "../../../contexts/User/UserContext";
 import { Redirect } from "react-router-dom";
 // import Toast from "../../atoms/Toast";
 
-const Login = () => {
+const Login = ({ history }) => {
   const { doSignIn, currentUser } = useContext(UserContext);
   const [userData, setUserData] = useState({});
 
@@ -16,7 +16,7 @@ const Login = () => {
   }
 
   const handleLogin = async (event) => {
-    doSignIn(event, userData);
+    await doSignIn(event, userData).then(() => history.push("/home"));
   };
 
   const handleChange = (input) => {

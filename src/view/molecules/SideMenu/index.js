@@ -1,6 +1,10 @@
 import * as S from "./styled";
 import GlobalStyle from "../../../styles/global";
 import { NavLink } from "react-router-dom";
+import * as Icon from "@material-ui/icons";
+import { LogoutContainer } from "./styled";
+import { UserContext } from "../../../contexts/User/UserContext";
+import { useContext } from "react";
 
 const menuItems = [
   { title: "Vitrine", route: "/vitrine" },
@@ -11,6 +15,13 @@ const menuItems = [
 ];
 
 const SideMenu = () => {
+  const { doSignOut } = useContext(UserContext);
+
+  const logout = async () => {
+    await doSignOut().then(() => {
+      window.location.href = "/";
+    });
+  };
   const renderItem = menuItems.map((item) => (
     <S.Item key={item.title}>
       <NavLink to={item.route} activeClassName="active">
@@ -28,6 +39,12 @@ const SideMenu = () => {
             <S.IconLogo />
           </NavLink>
         </S.Header>
+        <S.LogoutContainer>
+          <S.LogoutContent type={"button"} onClick={logout}>
+            <span>Logout</span>
+            <Icon.PowerOff />
+          </S.LogoutContent>
+        </S.LogoutContainer>
         {renderItem}
       </S.Content>
     </S.Container>

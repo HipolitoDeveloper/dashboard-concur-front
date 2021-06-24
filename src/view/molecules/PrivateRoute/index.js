@@ -3,15 +3,24 @@ import { Redirect, Route } from "react-router-dom";
 import { UserContext } from "../../../contexts/User/UserContext";
 
 const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, verifyUser } = useContext(UserContext);
+
+  useEffect(() => {
+    const user = async () => {
+      verifyUser();
+    };
+    user();
+  }, []);
 
   return (
-    <Route
-      {...rest}
-      render={(routeProps) =>
-        currentUser ? <RouteComponent {...routeProps} /> : <Redirect to="/" />
-      }
-    />
+    currentUser && (
+      <Route
+        {...rest}
+        render={(routeProps) =>
+          currentUser ? <RouteComponent {...routeProps} /> : <Redirect to="/" />
+        }
+      />
+    )
   );
 };
 

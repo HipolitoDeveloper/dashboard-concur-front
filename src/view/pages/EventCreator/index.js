@@ -1,12 +1,8 @@
 import * as S from "./styled";
 import Input from "../../atoms/Input";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Button from "../../atoms/Button";
 import * as Icon from "@material-ui/icons";
-import { VideoContext } from "../../../contexts/Video/VideoContext";
-import { TagsContext } from "../../../contexts/Tags/TagsContext";
-import Select from "react-select";
-import { DropdownContent } from "./styled";
 import GlobalStyle from "../../../styles/global";
 import { EventContext } from "../../../contexts/Event/EventContext";
 import * as Material from "@material-ui/core";
