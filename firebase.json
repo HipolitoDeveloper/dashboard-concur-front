@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "sapconcur-6f23a-59376",
+    "site": "sapconcur-6f23a",
     "public": "build",
     "ignore": [
       "firebase.json",
