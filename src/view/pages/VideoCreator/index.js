@@ -9,6 +9,8 @@ import Select from "react-select";
 import { DropdownContent } from "./styled";
 import GlobalStyle from "../../../styles/global";
 
+import { postVideo } from "../../../services/vimeo";
+
 const VideoCreator = ({ history }) => {
   const { videoInView, saveVideo, updateVideo, clearVideoInView } =
     useContext(VideoContext);
@@ -23,13 +25,26 @@ const VideoCreator = ({ history }) => {
     getTags();
   }, []);
 
-  const handleChange = (input) => {
-    const { value } = input.target;
+  const handleChange = (input, isTag) => {
+    if (!isTag) {
+      const { value } = input.target;
 
-    setObjVideo({
-      ...objVideo,
-      [input.target.name]: value,
-    });
+      setObjVideo({
+        ...objVideo,
+        [input.target.name]: value,
+      });
+    } else {
+      objVideo.tag = input;
+      setObjVideo({ ...objVideo });
+    }
+  };
+
+  const handleImage = async (input) => {
+    const { value, files } = input.target;
+
+    const fileVideo = files[0];
+
+    await postVideo({ url: value, size: fileVideo.size });
   };
 
   const sendVideoObj = async (event) => {
@@ -71,9 +86,9 @@ const VideoCreator = ({ history }) => {
           <S.ImageContent>
             <S.ImageInput
               type="file"
-              accept="image/*"
+              accept="video/*"
               id="fileElem"
-              // onChange={handleImage}
+              onChange={handleImage}
               required
             />
             {objVideo.image !== null ? (
@@ -112,6 +127,8 @@ const VideoCreator = ({ history }) => {
 
           <DropdownContent>
             <Select
+              onChange={(value) => handleChange(value, true)}
+              name="tag"
               value={objVideo.tag}
               options={tags}
               placeholder={"Escolha sua tag..."}

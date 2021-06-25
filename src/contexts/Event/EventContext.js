@@ -26,7 +26,6 @@ const EventProvider = ({ children }) => {
 
   const loadEvents = async (payload) => {
     await getEvents().then((events) => {
-      console.log(events);
       dispatch({ type: "LOAD_EVENTS", events });
     });
   };

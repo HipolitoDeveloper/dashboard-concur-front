@@ -1,26 +1,23 @@
 import { db } from "../../services/firebase";
-import { setStorage } from "../Blog/BlogReducer";
 
 export const getVideos = async () => {
-  await db
-    .collection("videosCollection")
-    .get()
-    .then((querySnapshot) => {
-      if (querySnapshot.docs.length > 0) {
-        let videos = [];
-        querySnapshot.docs.forEach((snapshot) => {
-          let video = {};
-          video.data = snapshot.data();
-          video.id = snapshot.id;
-          videos.push(video);
-        });
-        storage(videos);
-      }
-    });
-};
-
-export const storage = (videos) => {
-  localStorage.setItem("videos", JSON.stringify(videos));
+  return new Promise(async (resolve) => {
+    await db
+      .collection("videosCollection")
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+          let videos = [];
+          querySnapshot.docs.forEach((snapshot) => {
+            let video = {};
+            video.data = snapshot.data();
+            video.id = snapshot.id;
+            videos.push(video);
+          });
+          resolve(videos);
+        }
+      });
+  });
 };
 
 export const VideosReducer = (state, action) => {
@@ -51,7 +48,7 @@ export const VideosReducer = (state, action) => {
         videos: state.videos,
       };
     case "LOAD_VIDEO":
-      state.videos = JSON.parse(localStorage.getItem("videos"));
+      state.videos = action.videos;
 
       return {
         ...state,
@@ -72,7 +69,6 @@ export const VideosReducer = (state, action) => {
           } else {
             state.videos.push({ id: id.id, data: video });
           }
-          storage(state.videos);
         });
 
       return {
@@ -94,7 +90,6 @@ export const VideosReducer = (state, action) => {
           state.videos.forEach((image, index) => {
             if (image.id === action.payload.id) {
               state.videos.splice(index, 1);
-              setStorage(state.videos);
             }
           });
         })

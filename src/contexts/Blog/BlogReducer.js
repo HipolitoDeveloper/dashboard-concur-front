@@ -2,25 +2,23 @@ import { db, storage } from "../../services/firebase";
 import { v4 as uuidv4 } from "uuid";
 
 export const getPosts = async () => {
-  await db
-    .collection("blogCollection")
-    .get()
-    .then((querySnapshot) => {
-      if (querySnapshot.docs.length > 0) {
-        let posts = [];
-        querySnapshot.docs.forEach((snapshot) => {
-          let post = {};
-          post.data = snapshot.data();
-          post.id = snapshot.id;
-          posts.push(post);
-        });
-        setStorage(posts);
-      }
-    });
-};
-
-export const setStorage = (posts) => {
-  localStorage.setItem("posts", JSON.stringify(posts));
+  return new Promise(async (resolve) => {
+    await db
+      .collection("blogCollection")
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+          let posts = [];
+          querySnapshot.docs.forEach((snapshot) => {
+            let post = {};
+            post.data = snapshot.data();
+            post.id = snapshot.id;
+            posts.push(post);
+          });
+          resolve(posts);
+        }
+      });
+  });
 };
 
 export const BlogReducer = (state, action) => {
@@ -49,7 +47,7 @@ export const BlogReducer = (state, action) => {
         posts: state.posts,
       };
     case "LOAD_POSTS":
-      state.posts = JSON.parse(localStorage.getItem("posts"));
+      state.posts = action.posts;
       return {
         ...state,
         posts: state.posts,
@@ -83,8 +81,6 @@ export const BlogReducer = (state, action) => {
                 } else {
                   state.posts.push({ id: id.id, data: post });
                 }
-
-                setStorage(state.posts);
               });
           });
         }
@@ -109,7 +105,7 @@ export const BlogReducer = (state, action) => {
           state.posts.forEach((image, index) => {
             if (image.id === action.payload.id) {
               state.posts.splice(index, 1);
-              setStorage(state.posts);
+              s;
             }
           });
         })

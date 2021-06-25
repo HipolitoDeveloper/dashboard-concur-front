@@ -16,8 +16,13 @@ const ChatProvider = ({ children }) => {
     });
   };
 
+  const deleteMessage = (payload) => {
+    dispatch({ type: "DELETE_MESSAGE", payload });
+  };
+
   const contextValues = {
     loadMessages,
+    deleteMessage,
     ...state,
   };
 

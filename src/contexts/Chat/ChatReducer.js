@@ -18,6 +18,9 @@ export const getMessages = (collection, id) => {
           });
           resolve(messages);
         }
+      })
+      .catch((e) => {
+        console.log(e);
       });
   });
 };
@@ -26,6 +29,28 @@ export const ChatReducer = (state, action) => {
   switch (action.type) {
     case "LOAD_MESSAGES":
       state.messages = action.messages;
+      return {
+        ...state,
+        messages: state.messages,
+      };
+    case "DELETE_MESSAGE":
+      const { messageId, inViewId, collection } = action.payload;
+      db.collection(collection)
+        .doc(inViewId)
+        .collection("messageCollection")
+        .doc(messageId)
+        .delete()
+        .then(() => {})
+        .catch((error) => {
+          console.log(error);
+          alert("Tratar erro delete message");
+        });
+
+      state.messages.forEach((message, index) => {
+        if (message.id === messageId) {
+          state.messages.splice(index, 1);
+        }
+      });
       return {
         ...state,
         messages: state.messages,

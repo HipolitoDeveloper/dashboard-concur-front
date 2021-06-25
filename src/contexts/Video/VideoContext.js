@@ -3,16 +3,8 @@ import { getVideos, VideosReducer } from "./VideoReducer";
 
 export const VideoContext = createContext();
 
-const getVideosFromStorage = localStorage.getItem("videos")
-  ? JSON.parse(localStorage.getItem("videos"))
-  : [];
-
-// const getVideoInViewFromStorage = localStorage.getItem("videoInView")
-//   ? JSON.parse(localStorage.getItem("videoInView"))
-//   : [];
-
 const initialState = {
-  videos: getVideosFromStorage,
+  videos: [],
   videoInView: {},
 };
 
@@ -20,8 +12,8 @@ const VideosProvider = ({ children }) => {
   const [state, dispatch] = useReducer(VideosReducer, initialState);
 
   const loadVideos = async (payload) => {
-    await getVideos().then(() => {
-      dispatch({ type: "LOAD_VIDEO", payload });
+    await getVideos().then((videos) => {
+      dispatch({ type: "LOAD_VIDEO", videos });
     });
   };
 

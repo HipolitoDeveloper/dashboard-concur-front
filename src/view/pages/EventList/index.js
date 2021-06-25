@@ -30,6 +30,7 @@ const EventList = ({ history }) => {
 
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
   const [isGuestManagerOpen, setIsGuestManagerOpen] = useState(false);
+  const [eventInViewId, setEventInViewId] = useState("");
 
   useEffect(() => {
     const getEvents = async () => {
@@ -62,6 +63,7 @@ const EventList = ({ history }) => {
       await loadMessages({ collection: "eventsCollection", id: event.id });
     }
 
+    setEventInViewId(event.id);
     setIsChatModalOpen(!isChatModalOpen);
   };
 
@@ -140,7 +142,11 @@ const EventList = ({ history }) => {
         </Material.Fab>
       </S.FabButton>
 
-      <ChatModal isOpen={isChatModalOpen} handleClose={handleChatModal} />
+      <ChatModal
+        isOpen={isChatModalOpen}
+        handleClose={handleChatModal}
+        inViewId={eventInViewId}
+      />
     </S.Container>
   );
 };

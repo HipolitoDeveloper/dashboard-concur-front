@@ -1,26 +1,25 @@
 import { db } from "../../services/firebase";
 
 export const loadImages = async (collection) => {
-  await db
-    .collection(collection.collection)
-    .get()
-    .then((querySnapshot) => {
-      if (querySnapshot.docs.length > 0) {
-        collection.images = [];
-        querySnapshot.docs.forEach((snapshot) => {
-          let image = { id: "", data: {} };
-          image.data = snapshot.data();
-          image.id = snapshot.id;
-          collection.images.push(image);
-        });
-
-        storage(collection);
-      }
-    });
-};
-
-export const storage = (showCaseInView) => {
-  localStorage.setItem("showCaseInView", JSON.stringify(showCaseInView));
+  return new Promise(async (resolve) => {
+    await db
+      .collection(collection.collection)
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+          collection.images = [];
+          querySnapshot.docs.forEach((snapshot) => {
+            let image = { id: "", data: {} };
+            image.data = snapshot.data();
+            image.id = snapshot.id;
+            collection.images.push(image);
+          });
+          resolve(collection.images);
+        } else {
+          resolve([]);
+        }
+      });
+  });
 };
 
 export const ShowCaseReducer = (state, action) => {
@@ -35,6 +34,7 @@ export const ShowCaseReducer = (state, action) => {
         showCases: state.showCases,
       };
     case "LOAD_SHOWCASE":
+      state.showCaseInView = action.showCaseInView;
       return {
         showCaseInView: state.showCaseInView,
         showCases: state.showCases,

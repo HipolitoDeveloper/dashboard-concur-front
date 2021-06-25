@@ -4,7 +4,8 @@ import { useCallback, useContext, useEffect } from "react";
 import { ShowCaseContext } from "../../../contexts/ShowCase/ShowCaseContext";
 
 const ShowCaseHeader = ({ onChange }) => {
-  const { showCases, chooseShowCase } = useContext(ShowCaseContext);
+  const { showCases, chooseShowCase, eventInView } =
+    useContext(ShowCaseContext);
 
   const choose = () => {
     chooseShowCase(0);

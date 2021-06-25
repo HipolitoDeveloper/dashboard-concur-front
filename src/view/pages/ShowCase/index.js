@@ -28,7 +28,7 @@ const ShowCase = () => {
   const [toast, setToast] = useState({});
 
   const setImage = async (imageIndex, changeRequested, value) => {
-    loadShowCase(null, updateImage);
+    await loadShowCase(null, updateImage);
 
     function updateImage(newShowCaseInView) {
       if (imageIndex === 0 && objImage.index === undefined) {

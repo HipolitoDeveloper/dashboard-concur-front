@@ -1,16 +1,8 @@
 import { createContext, useEffect, useReducer, useState } from "react";
 
-import { auth } from "../../services/firebase";
 import { loadImages, ShowCaseReducer } from "./ShowCaseReducer";
 
 export const ShowCaseContext = createContext();
-
-const getShowCaseInView = localStorage.getItem("showCaseInView")
-  ? JSON.parse(localStorage.getItem("showCaseInView"))
-  : {
-      collection: "homeShowCaseCollection",
-      index: 0,
-    };
 
 const initialState = {
   showCases: [
@@ -26,7 +18,10 @@ const initialState = {
     },
     { title: "Blog", collection: "blogShowCaseCollection", active: false },
   ],
-  showCaseInView: getShowCaseInView,
+  showCaseInView: {
+    collection: "homeShowCaseCollection",
+    index: 0,
+  },
 };
 
 const ShowCaseProvider = ({ children }) => {
@@ -35,10 +30,10 @@ const ShowCaseProvider = ({ children }) => {
   useEffect(() => {}, []);
 
   const loadShowCase = async (payload, callback) => {
-    await loadImages(state.showCaseInView).then(() => {
+    await loadImages(state.showCaseInView).then((images) => {
       if (callback !== undefined) callback(state.showCaseInView);
+      dispatch({ type: "LOAD_SHOWCASE", showCaseInView: state.showCaseInView });
     });
-    dispatch({ type: "LOAD_SHOWCASE", payload });
   };
 
   const chooseShowCase = async (payload) => {

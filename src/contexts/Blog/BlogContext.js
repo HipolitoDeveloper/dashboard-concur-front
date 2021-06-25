@@ -3,12 +3,8 @@ import { getVideos, BlogReducer, getPosts } from "./BlogReducer";
 
 export const BlogContext = createContext();
 
-const getPostsFromStorage = localStorage.getItem("posts")
-  ? JSON.parse(localStorage.getItem("posts"))
-  : [];
-
 const initialState = {
-  posts: getPostsFromStorage,
+  posts: [],
   postInView: {},
 };
 
@@ -16,8 +12,8 @@ const BlogProvider = ({ children }) => {
   const [state, dispatch] = useReducer(BlogReducer, initialState);
 
   const loadPosts = async (payload) => {
-    await getPosts().then(() => {
-      dispatch({ type: "LOAD_POSTS", payload });
+    await getPosts().then((posts) => {
+      dispatch({ type: "LOAD_POSTS", posts });
     });
   };
 

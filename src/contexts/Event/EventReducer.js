@@ -46,17 +46,17 @@ export const getParticipants = (event) => {
     });
 };
 
-export const uploadParticipant = (participant, eventId) => {
-  console.log(participant);
+export const uploadParticipant = (participant, eventId, blob) => {
   const participantFileNameImage = `images/participants/${uuidv4()}-${
-    participant.blob.image
+    blob.image
   }`;
   const uploadParticipants = storage
     .ref()
     .child(participantFileNameImage)
-    .put(participant.blob, {
-      contentType: participant.blob.type,
+    .put(blob, {
+      contentType: blob.type,
     });
+
   delete participant.blob;
   uploadParticipants.on(
     "state_changed",
@@ -93,7 +93,6 @@ export const createImage = (url) => {
 export const EventReducer = (state, action) => {
   switch (action.type) {
     case "UPDATE_EVENT":
-      console.log(action);
       let eventToUpdate = {};
       state.events.map((event, i) => {
         if (action.payload.event.id === event.id) {
@@ -106,7 +105,7 @@ export const EventReducer = (state, action) => {
       });
 
       eventToUpdate.data.updateAt = new Date();
-      console.log(eventToUpdate);
+
       const newEvent = eventToUpdate.data;
       db.collection("eventsCollection")
         .doc(eventToUpdate.id)
@@ -186,10 +185,10 @@ export const EventReducer = (state, action) => {
       if (id === undefined) {
         id = state.eventInView.id;
       }
-      console.log("tweqe");
-      const participant = action.payload;
 
-      uploadParticipant(participant, id);
+      const { participant, participantBlob } = action.payload;
+
+      uploadParticipant(participant, id, participantBlob);
 
       return {
         ...state,
@@ -256,7 +255,7 @@ export const EventReducer = (state, action) => {
     case "DELETE_PARTICIPANT":
       const participantToDeleteIndex = action.payload.index;
       const participantToDeleteId = action.payload.id;
-      console.log(action.payload);
+
       if (participantToDeleteId) {
         state.eventInView.data.participants.splice(participantToDeleteIndex, 1);
         db.collection("eventsCollection")
@@ -306,7 +305,7 @@ export const EventReducer = (state, action) => {
 
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     canvas.toBlob((blob) => {
-                      participant.data.blob = blob;
+                      participant.blob = blob;
                     }, "image/jpeg");
                   });
 
@@ -351,7 +350,7 @@ export const EventReducer = (state, action) => {
       if (eventId === undefined) {
         eventId = state.eventInView.id;
       }
-
+      newParticipant.data.is_original = true;
       db.collection("eventsCollection")
         .doc(eventId)
         .collection("participantsCollection")
@@ -360,15 +359,20 @@ export const EventReducer = (state, action) => {
         .then(() => {})
         .catch((e) => {
           alert("Tratar erro não foi possível alterar o participante");
+          console.log(e);
         });
       return {
         ...state,
         eventInView: state.eventInView,
       };
     case "FIX_EVENT":
+      let eventInViewId = state.eventInView.data.id;
+      if (eventInViewId === undefined) {
+        eventInViewId = state.eventInView.id;
+      }
       const participantsArray = db
         .collection("eventsCollection")
-        .doc(state.eventInView.id);
+        .doc(eventInViewId);
 
       const removeParticipants = participantsArray.update({
         participants: firebase.firestore.FieldValue.delete(),

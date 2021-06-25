@@ -38,10 +38,6 @@ const GuestManager = ({ isOpen, handleClose, history, objEvent }) => {
   const [loading, setLoading] = useState(false); //Implementar loading
   const [isConfirmationAlertOpen, setIsConfirmationAlertOpen] = useState(false);
 
-  useEffect(() => {
-    console.log(eventInView);
-  }, []);
-
   const verifyParticipant = () => {
     let messageToReturn = "";
     let isNotAbleToContinue = true;
@@ -83,44 +79,42 @@ const GuestManager = ({ isOpen, handleClose, history, objEvent }) => {
 
     const { messageToReturn, isNotAbleToContinue } = verifyParticipant();
 
-    console.log(participant.blob);
-
-    console.log(participant);
     if (isNotAbleToContinue) {
       if (eventInView.data.participants.length === 0 && isNotAbleToContinue) {
         setIsConfirmationAlertOpen(!isConfirmationAlertOpen);
         return;
       }
 
-      if (participant.data.blob === undefined && isNotAbleToContinue) {
+      if (participant.blob === undefined && isNotAbleToContinue) {
         setIsConfirmationAlertOpen(!isConfirmationAlertOpen);
         return;
       }
-      saveParticipant(participant.data);
+      saveParticipant({
+        participant: participant.data,
+        participantBlob: participant.blob,
+      });
       setIsConfirmationAlertOpen(!isConfirmationAlertOpen);
     } else {
       alert(messageToReturn);
     }
-
-    console.log(eventInView);
   };
 
   const addNewParticipant = () => {
-    console.log("teste");
     addParticipant();
     handleAlertModal(true);
   };
 
   const finishEventCreation = () => {
+    const { messageToReturn, isNotAbleToContinue } = verifyParticipant();
     const participant =
       eventInView.data.participants[eventInView.data.participants.length - 1];
-    if (
-      participant.data.image !== "" &&
-      participant.data.title !== "" &&
-      participant.profession !== ""
-    ) {
-      if (participant.data.blob !== undefined) {
-        saveParticipant(participant.data);
+
+    if (isNotAbleToContinue) {
+      if (participant.blob !== undefined) {
+        saveParticipant({
+          participant: participant.data,
+          participantBlob: participant.blob,
+        });
       }
       fixEvent();
 
@@ -130,7 +124,7 @@ const GuestManager = ({ isOpen, handleClose, history, objEvent }) => {
         //Implementar loading
       }, 3000);
     } else {
-      alert("Salve o participante anterior antes de finalizar o evento");
+      alert(messageToReturn);
     }
   };
 

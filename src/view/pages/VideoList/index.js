@@ -21,7 +21,7 @@ const VideoList = ({ history }) => {
     useContext(VideoContext);
 
   const { loadMessages } = useContext(ChatContext);
-
+  const [eventInViewId, setEventInViewId] = useState("");
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const VideoList = ({ history }) => {
       await setVideoInView(video);
       await loadMessages({ collection: "videosCollection", id: video.id });
     }
-
+    setEventInViewId(video.id);
     setIsChatModalOpen(!isChatModalOpen);
   };
 
@@ -124,7 +124,11 @@ const VideoList = ({ history }) => {
         </Material.Fab>
       </S.FabButton>
 
-      <ChatModal isOpen={isChatModalOpen} handleClose={handleChatModal} />
+      <ChatModal
+        isOpen={isChatModalOpen}
+        inViewId={eventInViewId}
+        handleClose={handleChatModal}
+      />
     </S.Container>
   );
 };

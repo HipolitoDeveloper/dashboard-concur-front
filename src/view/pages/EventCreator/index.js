@@ -98,7 +98,6 @@ const EventCreator = ({ history }) => {
       }).then(() => {});
     }
 
-    console.log(isSavingWithNoParticipants);
     if (isSavingWithNoParticipants) {
       handleGuestManagerModal();
     } else {

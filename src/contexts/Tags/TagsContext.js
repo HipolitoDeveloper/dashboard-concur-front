@@ -3,20 +3,16 @@ import { getTags, TagsReducer } from "./TagsReducer";
 
 export const TagsContext = createContext();
 
-const storage = localStorage.getItem("tags")
-  ? JSON.parse(localStorage.getItem("tags"))
-  : [];
-
 const initialState = {
-  tags: storage,
+  tags: [],
 };
 
 const TagsProvider = ({ children }) => {
   const [state, dispatch] = useReducer(TagsReducer, initialState);
 
   const loadTags = async (payload) => {
-    await getTags().then(() => {
-      dispatch({ type: "LOAD_TAGS", payload });
+    await getTags().then((tags) => {
+      dispatch({ type: "LOAD_TAGS", tags });
     });
   };
 
