@@ -1,22 +1,42 @@
 import { db } from "../../services/firebase";
+import {
+  deleteVideo,
+  getVimeoVideos,
+  postVideo,
+  vimeoId,
+} from "../../services/vimeo";
 
 export const getVideos = async () => {
   return new Promise(async (resolve) => {
-    await db
-      .collection("videosCollection")
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.docs.length > 0) {
-          let videos = [];
-          querySnapshot.docs.forEach((snapshot) => {
-            let video = {};
-            video.data = snapshot.data();
-            video.id = snapshot.id;
-            videos.push(video);
-          });
-          resolve(videos);
-        }
+    getVimeoVideos().then((videosFromVimeo) => {
+      let vimeoVideos = videosFromVimeo.map((vimeo) => {
+        vimeo.link = vimeoId(vimeo.link);
+
+        return vimeo;
       });
+
+      db.collection("videosCollection")
+        .get()
+        .then(async (querySnapshot) => {
+          if (querySnapshot.docs.length > 0) {
+            let videos = [];
+
+            querySnapshot.docs.forEach((snapshot) => {
+              let video = { data: {} };
+              vimeoVideos.forEach((vimeoVideo) => {
+                if (vimeoVideo.link === snapshot.data().videoUrl) {
+                  video.image = vimeoVideo.pictures.sizes[3].link;
+                }
+              });
+              video.data = snapshot.data();
+              video.id = snapshot.id;
+              videos.push(video);
+            });
+
+            resolve(videos);
+          }
+        });
+    });
   });
 };
 

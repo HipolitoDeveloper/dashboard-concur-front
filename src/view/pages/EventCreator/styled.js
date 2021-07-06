@@ -114,3 +114,73 @@ export const SwitchButtonLive = styled.div`
     transition: all 2s;
   }
 `;
+
+export const CarouselContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 200px;
+`;
+
+export const CarouselContainer = styled.div`
+  height: 450px;
+  z-index: 5;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const AddImage = styled.button`
+  position: relative;
+  top: 100px;
+  border: 3px solid var(--color-yellow);
+  border-radius: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    color: var(--color-yellow);
+  }
+
+  -webkit-box-shadow: -1px 14px 36px -8px rgba(0, 0, 0, 0.65);
+  -moz-box-shadow: -1px 14px 36px -8px rgba(0, 0, 0, 0.65);
+  box-shadow: -1px 14px 36px -8px rgba(0, 0, 0, 0.65);
+`;
+
+export const DeleteButton = styled.button`
+  position: relative;
+  top: 100px;
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  background-color: red;
+  border-radius: 1000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -webkit-box-shadow: -1px 14px 36px -8px rgba(0, 0, 0, 0.65);
+  -moz-box-shadow: -1px 14px 36px -8px rgba(0, 0, 0, 0.65);
+  box-shadow: -1px 14px 36px -8px rgba(0, 0, 0, 0.65);
+  svg {
+    color: black;
+  }
+`;
+
+export const Buttons = styled.div`
+  width: 50%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
+`;
+export const ShowCaseImageContent = styled.div`
+  img {
+    width: 100px;
+    height: 350px;
+  }
+`;

@@ -8,9 +8,10 @@ import { db, storage } from "../../../services/firebase";
 import PropTypes from "prop-types";
 import ShowCaseHeader from "../ShowCaseHeader";
 import { ShowCaseContext } from "../../../contexts/ShowCase/ShowCaseContext";
+import { EventContext } from "../../../contexts/Event/EventContext";
 
-const ShowCaseModal = ({ isOpen, handleClose, showToast }) => {
-  const { showCaseInView, loadShowCase } = useContext(ShowCaseContext);
+const EventShowCaseModal = ({ isOpen, handleClose, showToast }) => {
+  const { eventInView, loadEvents } = useContext(EventContext);
 
   const [loading, setLoading] = useState(false); //Implementar loading
   const [srcImage, setSrcImage] = useState("");
@@ -72,14 +73,13 @@ const ShowCaseModal = ({ isOpen, handleClose, showToast }) => {
         () => {},
         () => {
           uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            showCaseImage.image = downloadURL;
-            showCaseImage.is_redirecting = true;
-            showCaseImage.is_showing = true;
+            eventInView.data.images.push({ image: downloadURL });
 
-            db.collection(showCaseInView.collection)
-              .add(showCaseImage)
+            db.collection("eventsCollection")
+              .doc(eventInView.id)
+              .update({ ...eventInView.data })
               .then(() => {
-                loadShowCase();
+                loadEvents();
                 cleanInformation();
                 handleClose();
                 showToast("success", "Imagem adicionada com sucesso");
@@ -88,7 +88,7 @@ const ShowCaseModal = ({ isOpen, handleClose, showToast }) => {
         }
       );
     } catch (error) {
-      loadShowCase();
+      loadEvents();
       cleanInformation();
       handleClose();
       showToast("error", "Não foi possível salvar a imagem");
@@ -149,15 +149,15 @@ const ShowCaseModal = ({ isOpen, handleClose, showToast }) => {
   );
 };
 
-export default ShowCaseModal;
+export default EventShowCaseModal;
 
-ShowCaseModal.propTypes = {
+EventShowCaseModal.propTypes = {
   isOpen: PropTypes.bool,
   handleClose: PropTypes.func,
   showToast: PropTypes.func,
 };
 
-ShowCaseModal.defaultProps = {
+EventShowCaseModal.defaultProps = {
   isOpen: false,
   handleClose: () => {},
   showToast: () => {},

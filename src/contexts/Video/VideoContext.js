@@ -1,5 +1,6 @@
 import { createContext, useEffect, useReducer } from "react";
 import { getVideos, VideosReducer } from "./VideoReducer";
+import { deleteVideo, deleteVideoFromVimeo } from "../../services/vimeo";
 
 export const VideoContext = createContext();
 
@@ -34,7 +35,10 @@ const VideosProvider = ({ children }) => {
   };
 
   const deleteVideo = async (payload) => {
-    dispatch({ type: "DELETE_VIDEO", payload });
+    console.log(payload);
+    deleteVideoFromVimeo(payload.data.videoUrl).then(() => {
+      dispatch({ type: "DELETE_VIDEO", payload });
+    });
   };
 
   const contextValues = {

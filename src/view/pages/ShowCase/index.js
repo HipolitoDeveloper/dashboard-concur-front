@@ -11,6 +11,7 @@ import * as Lab from "@material-ui/lab";
 import ShowCaseModal from "../../molecules/ShowCaseModal";
 import { ShowCaseContext } from "../../../contexts/ShowCase/ShowCaseContext";
 import AlertModal from "../../atoms/AlertModal";
+import Select from "react-select";
 
 const ShowCase = () => {
   const { showCaseInView, loadShowCase, deleteImageInShowCase } =

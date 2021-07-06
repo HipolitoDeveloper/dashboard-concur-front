@@ -75,3 +75,8 @@ export const FabButton = styled.div`
 `;
 
 export const EmptyMessage = styled.span``;
+
+export const DropdownContent = styled.div`
+  margin-top: 20px;
+  width: 50%;
+`;

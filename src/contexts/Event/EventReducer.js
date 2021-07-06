@@ -14,6 +14,7 @@ export const getEvents = async () => {
             let event = {};
             event.data = snapshot.data();
             event.id = snapshot.id;
+            console.log(event);
             getParticipants(event);
             events.push(event);
           });
@@ -126,14 +127,16 @@ export const EventReducer = (state, action) => {
       };
     case "SAVE_EVENT":
       const { event, hasParticipants } = action.payload;
-      const { blob } = event;
+
+      const { blob } = event.images[0];
       event.is_live = true;
       event.type = "live";
+      event.confirmed_users = 0;
       event.createdDate = new Date();
       const eventFileNameImage = `images/${uuidv4()}-${blob.image}`;
-      delete event.blob;
+      delete event.images[0].blob;
       delete event.participants;
-
+      //
       const uploadTask = storage
         .ref()
         .child(eventFileNameImage)
@@ -147,7 +150,8 @@ export const EventReducer = (state, action) => {
           uploadTask.snapshot.ref
             .getDownloadURL()
             .then((eventImageDownloaded) => {
-              event.image = eventImageDownloaded;
+              event.images = [{ image: eventImageDownloaded }];
+
               db.collection("eventsCollection")
                 .add(event)
                 .then((id) => {
@@ -174,7 +178,7 @@ export const EventReducer = (state, action) => {
             });
         }
       );
-
+      console.log(state.events);
       return {
         ...state,
         events: state.events,
@@ -227,6 +231,7 @@ export const EventReducer = (state, action) => {
         data: {
           is_live: true,
           participants: [],
+          images: [],
         },
       };
       return {

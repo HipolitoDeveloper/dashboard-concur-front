@@ -9,13 +9,19 @@ import Select from "react-select";
 import { DropdownContent } from "./styled";
 import GlobalStyle from "../../../styles/global";
 
-import { postVideo } from "../../../services/vimeo";
+import {
+  addTagToVideo,
+  getVimeoVideos,
+  postVideo,
+  vimeoId,
+} from "../../../services/vimeo";
+import { NavLink, Redirect } from "react-router-dom";
 
 const VideoCreator = ({ history }) => {
   const { videoInView, saveVideo, updateVideo, clearVideoInView } =
     useContext(VideoContext);
   const { loadTags, tags } = useContext(TagsContext);
-
+  const [inputVideo, setInpuVideo] = useState(null);
   const [objVideo, setObjVideo] = useState({ ...videoInView.data });
 
   useEffect(() => {
@@ -39,12 +45,8 @@ const VideoCreator = ({ history }) => {
     }
   };
 
-  const handleImage = async (input) => {
-    const { value, files } = input.target;
-
-    const fileVideo = files[0];
-
-    await postVideo({ url: value, size: fileVideo.size });
+  const handleVideo = (input) => {
+    setInpuVideo(input);
   };
 
   const sendVideoObj = async (event) => {
@@ -54,17 +56,39 @@ const VideoCreator = ({ history }) => {
         video: { id: videoInView.id, data: objVideo },
         updateStatus: false,
       });
+
+      getVimeoVideos().then((videosFromVimeo) => {
+        let vimeoVideos = videosFromVimeo.map((vimeo) => {
+          vimeo.link = vimeoId(vimeo.link);
+          return vimeo;
+        });
+        vimeoVideos.forEach((video) => {
+          if (video.link === videoInView.data.videoUrl) {
+            if (!video.tags.some((tag) => tag.name === objVideo.tag.value)) {
+              addTagToVideo(videoInView.data.videoUrl, objVideo.tag.value);
+            }
+          }
+        });
+      });
+
       setTimeout(() => {
         clearVideoInView();
         history.push("/videos");
         //Implementar loading
       }, 3000);
     } else {
-      await saveVideo(objVideo).then(() => {
-        setTimeout(() => {
-          history.push("/videos");
-          //Implementar loading
-        }, 3000);
+      await postVideo(inputVideo, {
+        name: objVideo.name,
+        description: objVideo.description,
+      }).then(async (videoId) => {
+        await addTagToVideo(videoId, objVideo.tag.value);
+        objVideo.videoUrl = videoId;
+        await saveVideo(objVideo).then(() => {
+          setTimeout(() => {
+            history.push("/videos");
+            //Implementar loading
+          }, 3000);
+        });
       });
     }
   };
@@ -74,9 +98,9 @@ const VideoCreator = ({ history }) => {
       <GlobalStyle />
       <S.BackButton
         type={"button"}
-        onClick={async () => {
-          await clearVideoInView();
-          history.goBack();
+        onClick={() => {
+          clearVideoInView();
+          history.push("/videos");
         }}
       >
         <Icon.ArrowBack style={{ color: "var(--color-black)", fontSize: 30 }} />
@@ -88,12 +112,12 @@ const VideoCreator = ({ history }) => {
               type="file"
               accept="video/*"
               id="fileElem"
-              onChange={handleImage}
+              onChange={handleVideo}
               required
             />
-            {objVideo.image !== null ? (
+            {inputVideo !== null ? (
               <>
-                <S.Image src={objVideo.image} alt="Video" />
+                <S.Image src={inputVideo.target.value} alt="Video" />
               </>
             ) : (
               <>
@@ -104,6 +128,20 @@ const VideoCreator = ({ history }) => {
             )}
           </S.ImageContent>
         </S.ImageSpot>
+        {Object.keys(videoInView).length !== 0 && (
+          <S.WarningMessage>
+            Não é possível atualizar o vídeo. Caso seja necessário, crie um novo{" "}
+            <NavLink
+              to="/video/criador"
+              onClick={() => {
+                clearVideoInView();
+                setObjVideo({});
+              }}
+            >
+              aqui.
+            </NavLink>
+          </S.WarningMessage>
+        )}
         <S.VideoForm onSubmit={(event) => sendVideoObj(event)}>
           <Input
             isFromLogin={false}

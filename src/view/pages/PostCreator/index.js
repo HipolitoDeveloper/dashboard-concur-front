@@ -34,8 +34,8 @@ const PostCreator = ({ history }) => {
         setObjPost({ ...objPost });
 
         await createImage(objPost.image).then((img) => {
-          canvas.width = 250;
-          canvas.height = 250;
+          canvas.width = 1920;
+          canvas.height = 1080;
 
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           canvas.toBlob((blob) => {

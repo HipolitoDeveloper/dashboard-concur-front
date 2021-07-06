@@ -17,6 +17,7 @@ const initialState = {
     data: {
       is_live: true,
       participants: [],
+      images: [],
     },
   },
 };
@@ -32,7 +33,6 @@ const EventProvider = ({ children }) => {
 
   const updateEvent = async (payload) => {
     dispatch({ type: "UPDATE_EVENT", payload });
-    await loadEvents();
   };
 
   const saveEvent = async (payload) => {

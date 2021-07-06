@@ -84,10 +84,10 @@ const EventList = ({ history }) => {
           <Icon.Delete style={{ color: "var(--color-white)", fontSize: 25 }} />
         </S.DeleteButton>
         <S.ThumbnailContent>
-          {event?.data?.image === undefined ? (
-            <S.ImageSpot />
+          {event?.data?.images.length > 0 ? (
+            <S.Image src={event?.data?.images[0].image} alt="Imagem do post" />
           ) : (
-            <S.Image src={event?.data?.image} alt="Imagem do post" />
+            <S.ImageSpot />
           )}
         </S.ThumbnailContent>
       </Material.TableCell>
@@ -96,7 +96,7 @@ const EventList = ({ history }) => {
       </Material.TableCell>
       <Material.TableCell component="th" scope="row">
         <S.Title onClick={handleGuestManagerModal}>
-          {event?.data?.confirmed_participants}
+          {event?.data?.confirmed_users}
         </S.Title>
       </Material.TableCell>
       <Material.TableCell component="th" scope="row">

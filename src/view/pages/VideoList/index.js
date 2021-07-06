@@ -71,10 +71,10 @@ const VideoList = ({ history }) => {
           <Icon.Delete style={{ color: "var(--color-white)", fontSize: 25 }} />
         </S.DeleteButton>
         <S.ThumbnailContent>
-          {video?.data?.image === undefined ? (
+          {video?.image === undefined ? (
             <S.ImageSpot />
           ) : (
-            <S.Image src={video?.data?.image} alt="Imagem do post" />
+            <S.Image src={video?.image} alt="Imagem do post" />
           )}
         </S.ThumbnailContent>
       </Material.TableCell>

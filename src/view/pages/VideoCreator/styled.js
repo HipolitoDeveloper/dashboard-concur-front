@@ -17,6 +17,11 @@ export const Container = styled.div`
 
 export const BackButton = styled.button``;
 
+export const WarningMessage = styled.span`
+  a {
+    color: var(--color-yellow);
+  }
+`;
 export const VideoForm = styled.form`
   width: 60%;
   padding-top: 20px;

@@ -35,14 +35,7 @@ export const SignupReducer = (state, action) => {
 
       db.collection("signupManagerCollection")
         .add(place)
-        .then((id) => {
-          if (state.places === null) {
-            state.places = [];
-            state.places.push({ id: id.id, data: place });
-          } else {
-            state.places.push({ id: id.id, data: place });
-          }
-        });
+        .then((id) => {});
       state.places.forEach((place) => {
         place.is_editting = false;
       });
@@ -120,6 +113,7 @@ export const SignupReducer = (state, action) => {
         places: state.places,
       };
     case "ADD_PLACE":
+      console.log(state.places);
       state.places.push({
         data: {
           place: "",
